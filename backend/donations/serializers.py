@@ -1,23 +1,27 @@
 from rest_framework import serializers
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from .models import User, Item
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(GeoFeatureModelSerializer):
+    """ A class to serialize locations as GeoJSON compatible data """
     class Meta:
         model = User
-        fields = ('id',
-                  'fname',
-                  'lname',
-                  )
+        geo_field = 'cordinates'
+        fields = '__all__'
 
-class ItemSerializer(serializers.ModelSerializer):
+class ItemSerializer(GeoFeatureModelSerializer):
+    """ A class to serialize locations as GeoJSON compatible data """
     class Meta:
         model = Item
-        fields = ('id',
-                  'name',
-                  'description',
-                  'is_active',
-                  'created_date',
-                  'category',
-                  'user',
-                  'transaction_type')
+        geo_field = 'cordinates'
+        fields = '__all__'
+        
+        # ('id',
+        #           'name',
+        #           'description',
+        #           'is_active',
+        #           'created_date',
+        #           'category',
+        #           'user',
+        #           'transaction_type')

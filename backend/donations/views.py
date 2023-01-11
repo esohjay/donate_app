@@ -9,6 +9,7 @@ from django.http.response import Http404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.contrib.gis.geos import Point
 
 
 
@@ -67,6 +68,7 @@ class ItemView(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        print(request.data)
         serializer = ItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

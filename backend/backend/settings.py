@@ -49,8 +49,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'donations.apps.DonationsConfig',
-    'rest_framework'
+    'rest_framework',
+    "rest_framework_gis",
+    'rest_framework.authtoken',
+    'django_filters',
+    'authemail',
 ]
+
+REST_FRAMEWORK = {
+	'DEFAULT_AUTHENTICATION_CLASSES': (
+		'rest_framework.authentication.TokenAuthentication',
+	)
+}
+AUTH_EMAIL_VERIFICATION=True
+AUTH_USER_MODEL = 'donations.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,7 +100,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'pythonspatial',
+        'NAME': 'geospatialdb',
         'USER': 'postgres',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'PASSWORD': 'postgress',
