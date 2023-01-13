@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from .models import User, Item
+from .models import UserProfile, Item
 
 
 class UserSerializer(GeoFeatureModelSerializer):
     """ A class to serialize locations as GeoJSON compatible data """
     class Meta:
-        model = User
+        model = UserProfile
         geo_field = 'cordinates'
         fields = '__all__'
 

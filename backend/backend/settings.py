@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+# from dotenv import load_dotenv
+# load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -53,17 +55,60 @@ INSTALLED_APPS = [
     "rest_framework_gis",
     'rest_framework.authtoken',
     'django_filters',
-    'authemail',
+    
+    'dj_rest_auth',
+    # 'django.contrib.sites',
+    'allauth',
+    'allauth.account', 
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+    # 'allauth.socialaccount.providers.google'
 ]
 
+SITE_ID = 1
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+# SOCIALACCOUNT_LOGIN_ON_GET=True
+# AUTH_USER_MODEL = 'donations.User'
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# AUTHENTICATION_BACKENDS = [
+#     # Needed to login by username in Django admin, regardless of `allauth`
+#     'django.contrib.auth.backends.ModelBackend',
+
+#     # `allauth` specific authentication methods, such as login by e-mail
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# ]
+
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         },
+#         'OAUTH_PKCE_ENABLED': True,
+#     }
+# }
+
 REST_FRAMEWORK = {
+     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 	'DEFAULT_AUTHENTICATION_CLASSES': (
+    
 		'rest_framework.authentication.TokenAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
 	)
 }
-AUTH_EMAIL_VERIFICATION=True
-AUTH_USER_MODEL = 'donations.User'
-
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }
+# REST_USE_JWT = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -100,7 +145,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'NAME': 'geospatialdb',
+        'NAME': 'spatialdb',
         'USER': 'postgres',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'PASSWORD': 'postgress',

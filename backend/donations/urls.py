@@ -8,5 +8,6 @@ urlpatterns = [
     path('users/<int:id>', UserView.as_view(), name='User Details'),
     path('items', ItemView.as_view(), name='All items'),
     path('items/<int:id>', ItemView.as_view(), name='Item Details'),
+    # path('auth/google/', GoogleLogin.as_view(), name='google_login')
 
 ]
