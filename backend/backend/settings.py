@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "rest_framework_gis",
     'rest_framework.authtoken',
     'django_filters',
-    
+    "rest_framework_api_key",
     'dj_rest_auth',
     # 'django.contrib.sites',
     'allauth',
@@ -65,10 +65,10 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.google'
 ]
 
-SITE_ID = 1
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+# SITE_ID = 1
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
 # SOCIALACCOUNT_LOGIN_ON_GET=True
 # AUTH_USER_MODEL = 'donations.User'
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -95,13 +95,14 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
+        "rest_framework_api_key.permissions.HasAPIKey",
     ],
-	'DEFAULT_AUTHENTICATION_CLASSES': (
+	# 'DEFAULT_AUTHENTICATION_CLASSES': (
     
-		'rest_framework.authentication.TokenAuthentication',
-         'rest_framework_simplejwt.authentication.JWTAuthentication',
-	)
+	# 	'rest_framework.authentication.TokenAuthentication',
+    #      'rest_framework_simplejwt.authentication.JWTAuthentication',
+	# )
 }
 # REST_FRAMEWORK = {
 #     'DEFAULT_PERMISSION_CLASSES': [
