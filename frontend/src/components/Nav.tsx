@@ -22,7 +22,7 @@ function Nav() {
     <header className="relative">
       <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16">
         <Link to="/" className="text-white font-bold text-2xl">
-          Share
+          myPADI
         </Link>
         <ul className="flex justify-around items-center gap-x-3 md:hidden">
           <li>

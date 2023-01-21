@@ -10,7 +10,7 @@ module.exports = {
     },
     extend: {
       colors: {
-        mainColor: "#9968D1",
+        mainColor: "#DD2684",
         altColor: "#ABB7BA",
         altColor2: "#F6F7F7",
         mainColor2: "#E5DDF7",
@@ -23,6 +23,12 @@ module.exports = {
         grayBg: "#C4C4C4",
         grayColor2: "#D7D7D7",
         sliderBg: "#EDEDED",
+      },
+      backgroundImage: {
+        regBg: "url('/images/regbg.svg')",
+        loginBg: "url('/images/login-bg2.svg')",
+        heroBg: "url('assets/hands.jpg')",
+        profileBg: "url('/images/profileBgd.svg')",
       },
     },
   },

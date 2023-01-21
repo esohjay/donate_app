@@ -1,12 +1,10 @@
-import React from 'react';
-
-import './App.css';
+import React from "react";
+import { Outlet } from "react-router-dom";
+import "./App.css";
 // import { auth } from './config/firebase';
 // import { createUserWithEmailAndPassword, User, getIdToken,  } from 'firebase/auth';
 // import { useState } from 'react';
-import Nav from './components/Nav';
-
-
+import Nav from "./components/Nav";
 
 function App() {
   // const [email, setEmail] = useState("")
@@ -18,7 +16,7 @@ function App() {
   //   event.preventDefault();
   //   createUserWithEmailAndPassword(auth, email, password)
   //   .then((userCredential) => {
-  //     // Signed in 
+  //     // Signed in
   //     const user = userCredential.user
   //     setUser(user);
   //     console.log(getIdToken(user))
@@ -36,18 +34,23 @@ function App() {
   // console.log(auth.currentUser?.getIdTokenResult())
   // console.log(getIdToken(user))
   return (
-    <Nav/>
-//     <div className="App">
-//       <h3>Login</h3>
-//      <form onSubmit={handleSignUp}>
-//       <input type="text" name='email' value={email} onChange={(e) => setEmail(e.target.value)} />
-//       <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
-//       <button type='submit'>sign up</button>
-//      </form>
-//      <button onClick={async ()=>{
-// await console.log(auth.currentUser?.getIdTokenResult())
-//      }}>rer</button>
-//     </div>
+    <>
+      <Nav />
+      <main>
+        <Outlet />
+      </main>
+    </>
+    //     <div className="App">
+    //       <h3>Login</h3>
+    //      <form onSubmit={handleSignUp}>
+    //       <input type="text" name='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+    //       <input type="password" name='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+    //       <button type='submit'>sign up</button>
+    //      </form>
+    //      <button onClick={async ()=>{
+    // await console.log(auth.currentUser?.getIdTokenResult())
+    //      }}>rer</button>
+    //     </div>
   );
 }
 

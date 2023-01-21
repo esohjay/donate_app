@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import Home from "./pages/Home";
 import reportWebVitals from "./reportWebVitals";
 import {
   createBrowserRouter,
@@ -9,9 +10,15 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter(
-  createRoutesFromElements(<Route path="/" element={<App />}></Route>)
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index element={<Home />} />
+    </Route>
+  )
 );
 
 const root = ReactDOM.createRoot(
@@ -19,7 +26,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
