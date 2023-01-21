@@ -1,6 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "../app/hooks";
 import { changeView } from "../features/app/appSlice";
+import { FcGoogle } from "react-icons/fc";
+import { FaTwitter, FaFacebookF } from "react-icons/fa";
 type Inputs = {
   email: String;
   password: String;
@@ -99,6 +101,20 @@ function SignUp() {
           submit
         </button>
       </form>
+      <p className="text-center mt-3 text-mainColor font-semibold text-lg mb-3 capitalize">
+        or sign up with
+      </p>
+      <div className="flex gap-3 justify-center">
+        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md bg-white">
+          <FcGoogle />
+        </button>
+        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-700 bg-white">
+          <FaFacebookF />
+        </button>
+        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-400 bg-white">
+          <FaTwitter />
+        </button>
+      </div>
       <div className="text-center mt-3">
         <button className="font-medium" onClick={() => dispatch(changeView())}>
           Already have an account? <span className="text-mainColor">Login</span>

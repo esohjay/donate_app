@@ -1,6 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import "./App.css";
+import "leaflet/dist/leaflet.css";
+import "leaflet/dist/images/marker-shadow.png";
 // import { auth } from './config/firebase';
 // import { createUserWithEmailAndPassword, User, getIdToken,  } from 'firebase/auth';
 // import { useState } from 'react';
