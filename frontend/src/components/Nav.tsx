@@ -79,7 +79,7 @@ function Nav() {
         className={`px-5 py-10 flex flex-wrap justify-evenly gap-5 absolute transition-all duration-700
         w-full ${
           showNav ? "left-0" : "-left-full"
-        } bg-white bg-opacity-50  backdrop-blur-md md:hidden shadow-sm`}
+        } bg-white bg-opacity-50  backdrop-blur-md md:hidden shadow-sm z-50`}
       >
         <NavBtn path={"/"} icon={<TfiGift />} text="free" />
         <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />

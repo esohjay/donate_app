@@ -9,32 +9,6 @@ import "leaflet/dist/images/marker-shadow.png";
 import Nav from "./components/Nav";
 
 function App() {
-  // const [email, setEmail] = useState("")
-  // const [password, setPassword] = useState("")
-  // const [error, setError] = useState("")
-  // const [user, setUser] = useState<User | null>(null)
-
-  // const handleSignUp = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   createUserWithEmailAndPassword(auth, email, password)
-  //   .then((userCredential) => {
-  //     // Signed in
-  //     const user = userCredential.user
-  //     setUser(user);
-  //     console.log(getIdToken(user))
-  //     // ...
-  //   })
-  //   .catch((error) => {
-  //    // const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     setError(errorMessage)
-  //     // ..
-  //   });
-  // }
-  // console.log(user)
-  // console.log(error)
-  // console.log(auth.currentUser?.getIdTokenResult())
-  // console.log(getIdToken(user))
   return (
     <>
       <Nav />

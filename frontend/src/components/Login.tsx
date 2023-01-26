@@ -1,22 +1,39 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "../app/hooks";
-import { changeView } from "../features/app/appSlice";
+import { changeView } from "../features/appSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
+import {
+  logInWithEmailAndPassword,
+  authenticateWithGoogle,
+  authenticateWithFacebook,
+  authenticateWithTwitter,
+} from "../features/authSlice";
+import useAuth from "../hooks/useAuth";
 
 type Inputs = {
-  email: String;
-  password: String;
+  email: string;
+  password: string;
 };
 function Login() {
   const dispatch = useAppDispatch();
+  // const user = useAppSelector(selectUser);
+  const user = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    dispatch(
+      logInWithEmailAndPassword({
+        email: data.email,
+        password: data.password,
+      })
+    );
+  };
+  console.log(user);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">
@@ -36,7 +53,9 @@ function Login() {
             focus:border-mainColor focus:border-2"
             {...register("email", { required: true })}
           />
-          {errors.email && <span>Email is required</span>}
+          {errors.email && (
+            <span className="text-red-500">Email is required</span>
+          )}
         </div>
         <div className="mb-5 ">
           <label
@@ -50,7 +69,9 @@ function Login() {
             type="password"
             {...register("password", { required: true })}
           />
-          {errors.password && <span>Password is required</span>}
+          {errors.password && (
+            <span className="text-red-500">Password is required</span>
+          )}
         </div>
         <button
           className="inline-block bg-mainColor capitalize text-white rounded-md py-1 px-4 
@@ -63,18 +84,30 @@ function Login() {
         or log in with
       </p>
       <div className="flex gap-3 justify-center">
-        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md bg-white">
+        <button
+          onClick={() => dispatch(authenticateWithGoogle())}
+          className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md bg-white"
+        >
           <FcGoogle />
         </button>
-        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-700 bg-white">
+        <button
+          onClick={() => dispatch(authenticateWithFacebook())}
+          className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-700 bg-white"
+        >
           <FaFacebookF />
         </button>
-        <button className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-400 bg-white">
+        <button
+          onClick={() => dispatch(authenticateWithTwitter())}
+          className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-400 bg-white"
+        >
           <FaTwitter />
         </button>
       </div>
       <div className="text-center mt-3">
-        <button className="font-medium" onClick={() => dispatch(changeView())}>
+        <button
+          className="font-medium"
+          onClick={() => dispatch(changeView("signup"))}
+        >
           Don't have an account? <span className="text-mainColor">Sign up</span>
         </button>
       </div>
