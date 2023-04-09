@@ -73,13 +73,10 @@ export const logInWithEmailAndPassword = createAsyncThunk(
   }
 );
 //Logout
-export const logOut = createAsyncThunk(
-  "auth/logInWithEmailAndPassword",
-  async () => {
-    await signOut(auth);
-    return null;
-  }
-);
+export const logOut = createAsyncThunk("auth/logout", async () => {
+  await signOut(auth);
+  return null;
+});
 //google authentication
 export const authenticateWithGoogle = createAsyncThunk(
   "auth/authenticateWithGoogle",
