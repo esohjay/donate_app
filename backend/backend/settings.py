@@ -184,7 +184,7 @@ DATABASES = {
         'NAME': 'spatialdb',
         'USER': 'postgres',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'PASSWORD': 'postgress',
+        'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT':'5432'
 

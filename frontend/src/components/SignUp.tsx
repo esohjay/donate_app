@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { changeView } from "../features/appSlice";
@@ -27,17 +28,19 @@ function SignUp() {
 
   const coordinates = useAppSelector(selectWktCoordinates);
 
-  const user = useAuth();
+  const { user, provider } = useAuth();
 
   const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
+    register: registerFields,
+    handleSubmit: handleSubmitForm,
+    setError: setFormError,
+    getValues,
+    formState: { errors: formErrors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmitForm: SubmitHandler<Inputs> = (data) => {
+    console.log(coordinates);
     if (!coordinates) {
-      setError("coordinates", { type: "required" });
+      setFormError("coordinates", { type: "required" });
       return;
     }
     dispatch(
@@ -47,14 +50,19 @@ function SignUp() {
       })
     );
   };
+
   console.log(user);
+  useEffect(() => {
+    if (user) {
+    }
+  }, [user]);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">
         Register
       </h3>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmitForm(onSubmitForm)}>
         <div className="mb-5 ">
           <label
             htmlFor="fname"
@@ -65,9 +73,9 @@ function SignUp() {
           <input
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
-            {...register("fname", { required: true })}
+            {...registerFields("fname", { required: true })}
           />
-          {errors.fname && <span>First name is required</span>}
+          {formErrors.fname && <span>First name is required</span>}
         </div>
         <div className="mb-5 ">
           <label
@@ -79,9 +87,9 @@ function SignUp() {
           <input
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
-            {...register("lname", { required: true })}
+            {...registerFields("lname", { required: true })}
           />
-          {errors.lname && <span>Last name is required</span>}
+          {formErrors.lname && <span>Last name is required</span>}
         </div>
         <div className="mb-5 ">
           <label
@@ -93,9 +101,9 @@ function SignUp() {
           <input
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
-            {...register("email", { required: true })}
+            {...registerFields("email", { required: true })}
           />
-          {errors.email && <span>Email is required</span>}
+          {formErrors.email && <span>Email is required</span>}
         </div>
         <div className="mb-5 ">
           <label
@@ -108,9 +116,9 @@ function SignUp() {
             type="tel"
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
-            {...register("phone", { required: true })}
+            {...registerFields("phone", { required: true })}
           />
-          {errors.phone && <span>Phone number is required</span>}
+          {formErrors.phone && <span>Phone number is required</span>}
         </div>
         <div className="mb-5 ">
           <label
@@ -122,23 +130,25 @@ function SignUp() {
           <input
             className="block p-2 border rounded-md w-full focus:border-mainColor focus:border-2 focus:outline-none text-mainColor text-base"
             type="password"
-            {...register("password", { required: true })}
+            {...registerFields("password", { required: true })}
           />
-          {errors.password && <span>Password is required</span>}
+          {formErrors.password && <span>Password is required</span>}
         </div>
         <div className="mb-5 ">
           <label
-            htmlFor="password"
+            htmlFor="confirmPassword"
             className="block text-mainColor font-semibold mb-3"
           >
-            Password
+            Confirm password
           </label>
           <input
             className="block p-2 border rounded-md w-full focus:border-mainColor focus:border-2 focus:outline-none text-mainColor text-base"
             type="password"
-            {...register("confirmPassword", { required: true })}
+            {...registerFields("confirmPassword", { required: true })}
           />
-          {errors.confirmPassword && <span>Password is required</span>}
+          {formErrors.confirmPassword && (
+            <span> confrim password is required</span>
+          )}
         </div>
         <button className="inline-block bg-mainColor capitalize text-white rounded-md py-1 px-4  font-medium">
           submit

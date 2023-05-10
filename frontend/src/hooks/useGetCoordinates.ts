@@ -15,7 +15,7 @@ function useGetCoordinates() {
         setLong(coords.longitude);
       },
       (error) => {
-        setError("Something went wrong getting your position!");
+        setError("Something went wrong while getting your position!");
       }
     );
   }
