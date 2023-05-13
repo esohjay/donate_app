@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'allauth.account', 
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    "corsheaders",
     # 'allauth.socialaccount.providers.google'
 ]
 
@@ -146,6 +147,7 @@ REST_FRAMEWORK = {
 # }
 # REST_USE_JWT = True
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -174,7 +176,29 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = [
+'DELETE',
+'GET',
+'OPTIONS',
+'PATCH',
+'POST',
+'PUT',
+]
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'x-requested-with',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

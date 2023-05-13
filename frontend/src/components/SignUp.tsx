@@ -5,6 +5,7 @@ import { changeView } from "../features/appSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
+import { useRegisterUserMutation } from "../api/auth";
 
 import {
   signUpWithEmailAndPassword,
@@ -25,6 +26,7 @@ type Inputs = {
 
 function SignUp() {
   const dispatch = useAppDispatch();
+  const [registerUser] = useRegisterUserMutation();
 
   const coordinates = useAppSelector(selectWktCoordinates);
 
@@ -43,19 +45,21 @@ function SignUp() {
       setFormError("coordinates", { type: "required" });
       return;
     }
+    console.log("here");
     dispatch(
       signUpWithEmailAndPassword({
-        email: data.email,
-        password: data.password,
+        ...data,
+        coordinates,
       })
     );
   };
 
-  console.log(user);
-  useEffect(() => {
-    if (user) {
-    }
-  }, [user]);
+  console.log(user, provider);
+  // useEffect(() => {
+  //   if (user && provider === "password") {
+  //     registerUser({ ...getValues(), coordinates });
+  //   }
+  // }, []);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

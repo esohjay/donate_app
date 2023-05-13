@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
 import axios from "axios";
+import { SignupInputs } from "../type";
 
 //fireabse
 import {
@@ -50,13 +51,24 @@ const initialState: AuthState = {
 //email and password sign up
 export const signUpWithEmailAndPassword = createAsyncThunk(
   "auth/signUpWithEmailAndPassword",
-  async (info: UserDetails) => {
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      info.email,
-      info.password
+  async (info: SignupInputs) => {
+    await createUserWithEmailAndPassword(auth, info.email, info.password);
+    //get user token
+    const token = await auth?.currentUser?.getIdToken(true);
+    //verify user and get record from db
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/users`,
+      info,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
-    return user.user.toJSON();
+
+    return data;
+    // return user.user.toJSON();
   }
 );
 

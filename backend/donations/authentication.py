@@ -28,8 +28,10 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
                 raise NoAuthToken("No auth token provided")
             token = req_header.split(" ").pop()
             decoded_token = None
+            print(token)
             try:
                 decoded_token = auth.verify_id_token(token)
+                print(decoded_token)
             except Exception:
                 raise InvalidAuthToken("Invalid auth token")
             
