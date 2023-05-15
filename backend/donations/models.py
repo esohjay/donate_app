@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     is_suspended = models.BooleanField('Suspension status', default=False)
     created_date = models.DateTimeField('date created', auto_now_add=True)
     no_show_count = models.IntegerField('Number of failed picked up', default=0)
-    uid = models.CharField( primary_key=True, default=1, max_length=30 )
+    uid = models.CharField( primary_key=True, default=1, max_length=30, unique=True )
 
     # objects = EmailUserManager()
 

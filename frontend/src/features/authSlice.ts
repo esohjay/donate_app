@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app/store";
 import axios from "axios";
 import { SignupInputs } from "../type";
+import Cookies from "js-cookie";
 
 //fireabse
 import {
@@ -13,6 +14,7 @@ import {
   FacebookAuthProvider,
   TwitterAuthProvider,
   signOut,
+  UserCredential,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -52,13 +54,21 @@ const initialState: AuthState = {
 export const signUpWithEmailAndPassword = createAsyncThunk(
   "auth/signUpWithEmailAndPassword",
   async (info: SignupInputs) => {
-    await createUserWithEmailAndPassword(auth, info.email, info.password);
+    const user = await createUserWithEmailAndPassword(
+      auth,
+      info.email,
+      info.password
+    );
+
     //get user token
     const token = await auth?.currentUser?.getIdToken(true);
     //verify user and get record from db
     const { data } = await axios.post(
       `${process.env.REACT_APP_SERVER_URL}/users`,
-      info,
+      {
+        ...info,
+        uid: user.user.uid,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,6 +91,25 @@ export const logInWithEmailAndPassword = createAsyncThunk(
       info.email,
       info.password
     );
+    //get user token
+    // const token = Cookies.get("token");
+    const token = await auth?.currentUser?.getIdToken(true);
+    console.log(token);
+    const b = `Bearer ${token}`;
+    //verify user and get record from db
+    const { data } = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/users`,
+      {
+        ...info,
+      },
+      {
+        headers: {
+          Authorization: b,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // console.log(data);
     return user.user.toJSON();
   }
 );

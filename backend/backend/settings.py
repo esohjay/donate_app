@@ -27,7 +27,28 @@ if os.name == 'nt':
     os.environ['PATH'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
     os.environ['PROJ_LIB'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
  
+import os
+from firebase_admin import credentials, initialize_app
 
+
+from dotenv import load_dotenv
+load_dotenv()
+# from firebase_admin import auth, credentials
+
+cred = credentials.Certificate({
+    "type": os.environ.get('FIREBASE_TYPE'),
+    "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+    "private_key_id": os.environ.get('FIREBASE_PRIVATE_KEY_ID'),
+    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
+    "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+    "client_id": os.environ.get('FIREBASE_CLIENT_ID'),
+    "auth_uri": os.environ.get('FIREBASE_AUTH_URI'),
+    "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+    "auth_provider_x509_cert_url": os.environ.get('FIREBASE_AUTH_PROVIDER_URI'),
+    "client_x509_cert_url": os.environ.get('FIREBASE_CLIENT_URI'),
+    "universe_domain": os.environ.get('FIREBASE_UNIVERSE_DOMAIN'),
+})
+firebase_app = initialize_app(cred)
 # firebase_cred = {
 #     "type": os.environ.get('FIREBASE_TYPE'),
 #     "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
@@ -136,6 +157,7 @@ REST_FRAMEWORK = {
     # ],
 	'DEFAULT_AUTHENTICATION_CLASSES': (
     'donations.authentication.FirebaseAuthentication',
+    #  'donations.authMiddleware.FirebaseAuthMiddleware',
 		# 'rest_framework.authentication.TokenAuthentication',
         #  'rest_framework_simplejwt.authentication.JWTAuthentication',
 	)
@@ -256,4 +278,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-FIREBASE_CONFIG = os.path.join(BASE_DIR,'firebase_credentials.json')
+# FIREBASE_CONFIG = os.path.join(BASE_DIR,'firebase_credentials.json')

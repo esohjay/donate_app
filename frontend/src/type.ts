@@ -5,5 +5,5 @@ export type SignupInputs = {
   fname: string;
   lname: string;
   phone: number;
-  coordinates: string | null;
+  cordinates: string | null;
 };

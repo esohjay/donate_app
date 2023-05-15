@@ -21,14 +21,14 @@ type Inputs = {
   fname: string;
   lname: string;
   phone: number;
-  coordinates: string;
+  cordinates: string;
 };
 
 function SignUp() {
   const dispatch = useAppDispatch();
   const [registerUser] = useRegisterUserMutation();
 
-  const coordinates = useAppSelector(selectWktCoordinates);
+  const cordinates = useAppSelector(selectWktCoordinates);
 
   const { user, provider } = useAuth();
 
@@ -40,16 +40,16 @@ function SignUp() {
     formState: { errors: formErrors },
   } = useForm<Inputs>();
   const onSubmitForm: SubmitHandler<Inputs> = (data) => {
-    console.log(coordinates);
-    if (!coordinates) {
-      setFormError("coordinates", { type: "required" });
+    console.log(cordinates);
+    if (!cordinates) {
+      setFormError("cordinates", { type: "required" });
       return;
     }
     console.log("here");
     dispatch(
       signUpWithEmailAndPassword({
         ...data,
-        coordinates,
+        cordinates,
       })
     );
   };
