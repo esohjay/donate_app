@@ -1,11 +1,11 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { changeView } from "../features/appSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
-import useAuth from "../hooks/useAuth";
-import { useRegisterUserMutation } from "../api/auth";
+// import useAuth from "../hooks/useAuth";
+// import { useRegisterUserMutation } from "../api/auth";
 
 import {
   signUpWithEmailAndPassword,
@@ -26,26 +26,24 @@ type Inputs = {
 
 function SignUp() {
   const dispatch = useAppDispatch();
-  const [registerUser] = useRegisterUserMutation();
+  const [cordinateError, setCordinateError] = useState(false);
+  // const [registerUser] = useRegisterUserMutation();
 
   const cordinates = useAppSelector(selectWktCoordinates);
 
-  const { user, provider } = useAuth();
+  // const { user, provider } = useAuth();
 
   const {
     register: registerFields,
     handleSubmit: handleSubmitForm,
-    setError: setFormError,
-    getValues,
     formState: { errors: formErrors },
   } = useForm<Inputs>();
   const onSubmitForm: SubmitHandler<Inputs> = (data) => {
-    console.log(cordinates);
     if (!cordinates) {
-      setFormError("cordinates", { type: "required" });
+      setCordinateError(true);
       return;
     }
-    console.log("here");
+
     dispatch(
       signUpWithEmailAndPassword({
         ...data,
@@ -53,13 +51,27 @@ function SignUp() {
       })
     );
   };
-
-  console.log(user, provider);
-  // useEffect(() => {
-  //   if (user && provider === "password") {
-  //     registerUser({ ...getValues(), coordinates });
-  //   }
-  // }, []);
+  const handleGoogleOpt = () => {
+    if (!cordinates) {
+      setCordinateError(true);
+      return;
+    }
+    dispatch(authenticateWithGoogle());
+  };
+  const handleFacebookOpt = () => {
+    if (!cordinates) {
+      setCordinateError(true);
+      return;
+    }
+    dispatch(authenticateWithFacebook());
+  };
+  const handleTwitterOpt = () => {
+    if (!cordinates) {
+      setCordinateError(true);
+      return;
+    }
+    dispatch(authenticateWithTwitter());
+  };
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">
@@ -157,25 +169,30 @@ function SignUp() {
         <button className="inline-block bg-mainColor capitalize text-white rounded-md py-1 px-4  font-medium">
           submit
         </button>
+        {cordinateError && (
+          <span className="text-sm text-red-500 block py-3">
+            Select your location before you proceed
+          </span>
+        )}
       </form>
       <p className="text-center mt-3 text-mainColor font-semibold text-lg mb-3 capitalize">
         or sign up with
       </p>
       <div className="flex gap-3 justify-center">
         <button
-          onClick={() => dispatch(authenticateWithGoogle())}
+          onClick={handleGoogleOpt}
           className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md bg-white"
         >
           <FcGoogle />
         </button>
         <button
-          onClick={() => dispatch(authenticateWithFacebook())}
+          onClick={handleFacebookOpt}
           className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-700 bg-white"
         >
           <FaFacebookF />
         </button>
         <button
-          onClick={() => dispatch(authenticateWithTwitter())}
+          onClick={handleTwitterOpt}
           className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md text-blue-400 bg-white"
         >
           <FaTwitter />
