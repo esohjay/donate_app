@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { changeView } from "../features/appSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
-// import useAuth from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
+import { SignupInputs } from "../type";
 // import { useRegisterUserMutation } from "../api/auth";
 
 import {
@@ -14,15 +15,6 @@ import {
   authenticateWithTwitter,
   selectWktCoordinates,
 } from "../features/authSlice";
-type Inputs = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  fname: string;
-  lname: string;
-  phone: number;
-  cordinates: string;
-};
 
 function SignUp() {
   const dispatch = useAppDispatch();
@@ -31,14 +23,14 @@ function SignUp() {
 
   const cordinates = useAppSelector(selectWktCoordinates);
 
-  // const { user, provider } = useAuth();
+  const { user, provider } = useAuth();
 
   const {
     register: registerFields,
     handleSubmit: handleSubmitForm,
     formState: { errors: formErrors },
-  } = useForm<Inputs>();
-  const onSubmitForm: SubmitHandler<Inputs> = (data) => {
+  } = useForm<SignupInputs>();
+  const onSubmitForm: SubmitHandler<SignupInputs> = (data) => {
     if (!cordinates) {
       setCordinateError(true);
       return;
@@ -72,6 +64,13 @@ function SignUp() {
     }
     dispatch(authenticateWithTwitter());
   };
+  useEffect(() => {
+    // if the provider is not password, change screen to where user can complete their details
+    if (provider !== "password") {
+      dispatch(changeView("social-signup"));
+    }
+  }, [provider]);
+  console.log(user, provider);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">
@@ -129,7 +128,7 @@ function SignUp() {
             Phone
           </label>
           <input
-            type="tel"
+            type="text"
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
             {...registerFields("phone", { required: true })}

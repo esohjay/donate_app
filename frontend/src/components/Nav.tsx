@@ -29,7 +29,7 @@ function Nav() {
             <NavLink
               to={"/"}
               className={({ isActive }) =>
-                isActive ? "text-white" : "text-red-500"
+                isActive ? "text-altColor2" : "text-white"
               }
             >
               {" "}
@@ -40,7 +40,7 @@ function Nav() {
             <NavLink
               to={"/"}
               className={({ isActive }) =>
-                isActive ? "text-white" : "text-red-500"
+                isActive ? "text-altColor2" : "text-white"
               }
             >
               {" "}
@@ -54,7 +54,7 @@ function Nav() {
             {showNav ? <VscChromeClose /> : <GiHamburgerMenu />}
           </button>
         </ul>
-
+        {/* Big screen */}
         <ul className="hidden md:flex gap-x-7 items-center ">
           <NavItem path={"/"} text="free" icon={<TfiGift />} />
           <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Login from "../components/Login";
 import SignUp from "../components/SignUp";
+import SignUpAlt from "../components/SignUpAlt";
 import AddressModal from "../components/AddressModal";
 import { selectViewState, setAddressModalView } from "../features/appSlice";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
@@ -116,7 +117,13 @@ function Home() {
         </article>
         <article className="w-full max-w-md ">
           {/* <p>share with your padi</p> */}
-          {view === "login" ? <Login /> : <SignUp />}
+          {view === "login" ? (
+            <Login />
+          ) : view === "password-signup" ? (
+            <SignUp />
+          ) : (
+            <SignUpAlt />
+          )}
         </article>
       </section>
       <AddressModal />
