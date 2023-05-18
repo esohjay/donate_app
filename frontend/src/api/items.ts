@@ -1,10 +1,17 @@
 import { appApi, providesList } from ".";
 import { SignupInputs, GeoJSONFeatureCollection } from "../type";
 
+type Inputs = {
+  description: string;
+  category: string;
+  quantity: number;
+  name: string;
+  transaction_type: string;
+};
 const itemApi = appApi.injectEndpoints({
   endpoints: (build) => ({
     addItem: build.mutation({
-      query: (formBody: SignupInputs) => ({
+      query: (formBody: Inputs) => ({
         url: "/items",
         method: "POST",
         body: formBody,

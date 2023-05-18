@@ -59,7 +59,7 @@ function Nav() {
           <NavItem path={"/"} text="free" icon={<TfiGift />} />
           <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />
           <NavItem
-            path={"/"}
+            path={"/items/add"}
             text="add listing"
             icon={<MdOutlineAddToPhotos />}
           />
@@ -83,7 +83,11 @@ function Nav() {
       >
         <NavBtn path={"/"} icon={<TfiGift />} text="free" />
         <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />
-        <NavBtn path={"/"} icon={<MdOutlineAddToPhotos />} text="add listing" />
+        <NavBtn
+          path={"/items/add"}
+          icon={<MdOutlineAddToPhotos />}
+          text="add listing"
+        />
         <NavBtn path={"/"} icon={<MdOutlineGroups />} text="community" />
         <NavBtn
           path={"/"}

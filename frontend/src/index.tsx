@@ -5,6 +5,8 @@ import "leaflet/dist/leaflet.css";
 import App from "./App";
 import Home from "./pages/Home";
 import Item from "./pages/items/Items";
+import Free from "./pages/items/Free";
+import AddItem from "./pages/items/AddItem";
 import reportWebVitals from "./reportWebVitals";
 import {
   createBrowserRouter,
@@ -19,7 +21,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
-      <Route path="items" element={<Item />} />
+      <Route path="items" element={<Item />}>
+        <Route index path="free" element={<Free />} />
+        <Route index path="add" element={<AddItem />} />
+      </Route>
     </Route>
   )
 );
