@@ -28,6 +28,7 @@ export interface GeoJSONFeature<
   G = GeoJSONGeometryPoint
 > {
   type: "Feature";
+  id: string;
   properties: P;
   geometry: G;
 }

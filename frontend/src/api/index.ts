@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { QueryDefinition } from "@reduxjs/toolkit/query";
+
 import Cookies from "js-cookie";
+// import { GeometryCollection } from "geojson";
+import { GeoJSONFeatureCollection } from "../type";
+import { GeoJSONProperties } from "../type";
 
 export const appApi = createApi({
   reducerPath: "appApi",
@@ -23,16 +28,28 @@ export const appApi = createApi({
   }),
 });
 
-export function providesList<
-  R extends { id: string | number }[],
-  T extends string
->(resultsWithIds: R | undefined, tagType: T) {
-  return resultsWithIds
-    ? [
-        { type: tagType, id: "LIST" },
-        ...resultsWithIds.map(({ id }) => ({ type: tagType, id })),
-      ]
-    : [{ type: tagType, id: "LIST" }];
-}
+// export function providesList<
+//   GeoJSONFeatureCollection,
+//   T extends string
+// >(results: GeoJSONFeatureCollection | undefined, tagType: T) {
+//   return results
+//     ? [
+//         { type: tagType, id: "LIST" },
+//         ...results.map(( id: string ) => ({ type: tagType, id })),
+//       ]
+//     : [{ type: tagType, id: "LIST" }];
+// }
+
+// function getItemsProvidesTags(result: GeoJSONFeatureCollection | undefined, error: any): string[] {
+//   if (error) {
+//     return ['ITEM' as const];
+//   }
+
+//   if (result) {
+//     return [...result.features.map((feature) => ({ type: 'ITEM' as const, id: feature.properties.id.toString() }))];
+//   }
+
+//   return ['ITEM' as const];
+// }
 
 export const { useUploadMutation } = appApi;

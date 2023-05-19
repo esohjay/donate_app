@@ -15,9 +15,11 @@ import {
   MdOutlineVolunteerActivism,
 } from "react-icons/md";
 import { TfiGift } from "react-icons/tfi";
+import useAuth from "../hooks/useAuth";
 
 function Nav() {
   const [showNav, setShowNav] = useState(false);
+  const { user } = useAuth();
   return (
     <header className="relative">
       <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16">
@@ -59,7 +61,7 @@ function Nav() {
           <NavItem path={"/"} text="free" icon={<TfiGift />} />
           <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />
           <NavItem
-            path={"/items/add"}
+            path={`/items/${user?.uid}/add`}
             text="add listing"
             icon={<MdOutlineAddToPhotos />}
           />
@@ -84,7 +86,7 @@ function Nav() {
         <NavBtn path={"/"} icon={<TfiGift />} text="free" />
         <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />
         <NavBtn
-          path={"/items/add"}
+          path={`/items/${user?.uid}/add`}
           icon={<MdOutlineAddToPhotos />}
           text="add listing"
         />

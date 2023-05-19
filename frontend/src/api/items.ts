@@ -1,5 +1,5 @@
-import { appApi, providesList } from ".";
-import { SignupInputs, GeoJSONFeatureCollection } from "../type";
+import { appApi } from ".";
+import { GeoJSONFeatureCollection } from "../type";
 
 type Inputs = {
   description: string;
@@ -7,7 +7,24 @@ type Inputs = {
   quantity: number;
   name: string;
   transaction_type: string;
+  user: string | undefined;
+  cordinate: string;
 };
+// function getItemsProvidesTags(result: GeoJSONFeatureCollection | undefined, error: any): string[]  {
+//   if (error) {
+//     return ['ITEM'];
+//   }
+
+//   if (result) {
+//     return result.features.map((feature) => ({
+//       type: 'ITEM' as const,
+//       id: feature.properties.id.toString(),
+//     }));
+//   }
+
+//   return ['ITEM'];
+// }
+
 const itemApi = appApi.injectEndpoints({
   endpoints: (build) => ({
     addItem: build.mutation({
@@ -21,6 +38,22 @@ const itemApi = appApi.injectEndpoints({
     getItems: build.query<GeoJSONFeatureCollection, void>({
       query: () => "/items",
       //   providesTags: (result) => providesList(result, "ITEM"),
+      providesTags: (result, error, args) => {
+        if (error) {
+          return ["ITEM"];
+        }
+
+        if (result) {
+          return [
+            ...result.features.map((feature) => ({
+              type: "ITEM" as const,
+              id: feature.properties.id.toString(),
+            })),
+          ];
+        }
+
+        return ["ITEM"];
+      },
     }),
     getSingleItem: build.query({
       query: () => "/items",

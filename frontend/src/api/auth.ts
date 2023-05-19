@@ -1,5 +1,5 @@
 import { appApi } from ".";
-import { SignupInputs } from "../type";
+import { SignupInputs, GeoJSONFeature } from "../type";
 
 const authApi = appApi.injectEndpoints({
   endpoints: (build) => ({
@@ -9,7 +9,11 @@ const authApi = appApi.injectEndpoints({
         method: "POST",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "AUTH", id: "AUTHLIST" }],
+      invalidatesTags: [{ type: "AUTH", id: "LIST" }],
+    }),
+    getSingleUser: build.query<GeoJSONFeature, string>({
+      query: (id) => `/users/${id}`,
+      providesTags: (result, error, id) => [{ type: "AUTH", id }],
     }),
     // updateLeave: build.mutation({
     //   query: (formBody) => ({
@@ -51,4 +55,4 @@ const authApi = appApi.injectEndpoints({
   }),
   overrideExisting: false,
 });
-export const { useRegisterUserMutation } = authApi;
+export const { useRegisterUserMutation, useGetSingleUserQuery } = authApi;

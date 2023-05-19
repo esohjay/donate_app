@@ -23,7 +23,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="items" element={<Item />}>
         <Route index path="free" element={<Free />} />
-        <Route index path="add" element={<AddItem />} />
+        <Route index path=":uid/add" element={<AddItem />} />
       </Route>
     </Route>
   )

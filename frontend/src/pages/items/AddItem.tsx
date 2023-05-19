@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAddItemMutation } from "../../api/items";
+import { useGetSingleUserQuery } from "../../api/auth";
+import { useParams } from "react-router-dom";
 
 type Inputs = {
   description: string;
@@ -12,13 +14,19 @@ type Inputs = {
 
 function AddItem() {
   const [addItem] = useAddItemMutation();
+  const { uid } = useParams();
+  const { currentData } = useGetSingleUserQuery(`${uid}`);
   const {
     register,
     handleSubmit: handleSubmitForm1,
     formState: { errors },
   } = useForm<Inputs>();
   const onSubmitForm: SubmitHandler<Inputs> = (data) => {
-    addItem(data);
+    addItem({
+      ...data,
+      cordinate: `${currentData?.geometry}`,
+      user: currentData?.id,
+    });
   };
   return (
     <article className="bg-white p-5 rounded-md ">
@@ -82,8 +90,8 @@ function AddItem() {
             focus:border-mainColor focus:border-2"
           >
             <option value="">Select type</option>
-            <option value="give">Give away</option>
-            <option value="want">Wanted</option>
+            <option value="Offer">Give away</option>
+            <option value="Request">Request</option>
           </select>
           {errors.transaction_type && (
             <span className="text-red-500">
