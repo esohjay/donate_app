@@ -1,19 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { QueryDefinition } from "@reduxjs/toolkit/query";
+
+import Cookies from "js-cookie";
+// import { GeometryCollection } from "geojson";
+import { GeoJSONFeatureCollection } from "../type";
+import { GeoJSONProperties } from "../type";
 
 export const appApi = createApi({
   reducerPath: "appApi",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_SERVER_URL,
-    // prepareHeaders: (headers) => {
-    //   headers.set("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-    //   headers.set("Access-Control-Allow-Origin", "*");
-    //   headers.set("Access-Control-Allow-Headers", "Content-Type");
-    //   //   const authToken = Cookies.get("token");
-    //   //   if (authToken) headers.set("Authorization", authToken);
-    //   return headers;
-    // },
+    prepareHeaders: (headers) => {
+      const authToken = Cookies.get("token");
+      if (authToken) headers.set("Authorization", authToken);
+      return headers;
+    },
   }),
-  tagTypes: ["AUTH"],
+  tagTypes: ["AUTH", "ITEM"],
   endpoints: (builder) => ({
     upload: builder.mutation({
       query: (formBody) => ({
@@ -24,5 +27,29 @@ export const appApi = createApi({
     }),
   }),
 });
+
+// export function providesList<
+//   GeoJSONFeatureCollection,
+//   T extends string
+// >(results: GeoJSONFeatureCollection | undefined, tagType: T) {
+//   return results
+//     ? [
+//         { type: tagType, id: "LIST" },
+//         ...results.map(( id: string ) => ({ type: tagType, id })),
+//       ]
+//     : [{ type: tagType, id: "LIST" }];
+// }
+
+// function getItemsProvidesTags(result: GeoJSONFeatureCollection | undefined, error: any): string[] {
+//   if (error) {
+//     return ['ITEM' as const];
+//   }
+
+//   if (result) {
+//     return [...result.features.map((feature) => ({ type: 'ITEM' as const, id: feature.properties.id.toString() }))];
+//   }
+
+//   return ['ITEM' as const];
+// }
 
 export const { useUploadMutation } = appApi;

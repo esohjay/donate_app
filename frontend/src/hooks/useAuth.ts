@@ -17,7 +17,15 @@ function useAuth() {
   const provider = useAppSelector(selectAuthProvider);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      dispatch(setAuthStatus(currentUser?.toJSON()));
+      dispatch(
+        setAuthStatus({
+          fullname: currentUser?.displayName,
+          email: currentUser?.email,
+          uid: currentUser?.uid,
+          phoneNumber: currentUser?.phoneNumber,
+          photoUrl: currentUser?.photoURL,
+        })
+      );
       dispatch(getAuthProvider(currentUser?.providerData[0].providerId));
       if (currentUser === null) {
         Cookies.remove("token");

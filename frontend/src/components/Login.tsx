@@ -106,7 +106,7 @@ function Login() {
       <div className="text-center mt-3">
         <button
           className="font-medium"
-          onClick={() => dispatch(changeView("signup"))}
+          onClick={() => dispatch(changeView("password-signup"))}
         >
           Don't have an account? <span className="text-mainColor">Sign up</span>
         </button>

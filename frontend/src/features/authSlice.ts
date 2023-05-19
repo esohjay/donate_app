@@ -15,6 +15,7 @@ import {
   TwitterAuthProvider,
   signOut,
   UserCredential,
+  User,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -23,11 +24,18 @@ interface Address {
   coordinates: string;
   placeId: string;
 }
+interface FirebaseUser {
+  fullname: string | null | undefined;
+  email: string | null | undefined;
+  phoneNumber?: string | null;
+  photoUrl?: string | null;
+  uid: string | undefined;
+}
 // Define a type for the slice state
 interface AuthState {
   user: object | null;
   status: string;
-  currentUser: object | undefined;
+  currentUser: FirebaseUser | null;
   authProvider: string | undefined;
   coordinates: Address[] | null;
   error: object | null;
@@ -43,7 +51,7 @@ interface UserDetails {
 const initialState: AuthState = {
   user: null,
   status: "idle",
-  currentUser: undefined,
+  currentUser: null,
   authProvider: undefined,
   coordinates: null,
   error: null,
@@ -194,7 +202,7 @@ export const authSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    setAuthStatus: (state, action: PayloadAction<object | undefined>) => {
+    setAuthStatus: (state, action: PayloadAction<FirebaseUser | null>) => {
       state.currentUser = action.payload;
     },
     getAuthProvider: (state, action: PayloadAction<string | undefined>) => {

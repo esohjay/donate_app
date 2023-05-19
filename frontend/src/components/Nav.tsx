@@ -15,9 +15,11 @@ import {
   MdOutlineVolunteerActivism,
 } from "react-icons/md";
 import { TfiGift } from "react-icons/tfi";
+import useAuth from "../hooks/useAuth";
 
 function Nav() {
   const [showNav, setShowNav] = useState(false);
+  const { user } = useAuth();
   return (
     <header className="relative">
       <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16">
@@ -29,7 +31,7 @@ function Nav() {
             <NavLink
               to={"/"}
               className={({ isActive }) =>
-                isActive ? "text-white" : "text-red-500"
+                isActive ? "text-altColor2" : "text-white"
               }
             >
               {" "}
@@ -40,7 +42,7 @@ function Nav() {
             <NavLink
               to={"/"}
               className={({ isActive }) =>
-                isActive ? "text-white" : "text-red-500"
+                isActive ? "text-altColor2" : "text-white"
               }
             >
               {" "}
@@ -54,12 +56,12 @@ function Nav() {
             {showNav ? <VscChromeClose /> : <GiHamburgerMenu />}
           </button>
         </ul>
-
+        {/* Big screen */}
         <ul className="hidden md:flex gap-x-7 items-center ">
           <NavItem path={"/"} text="free" icon={<TfiGift />} />
           <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />
           <NavItem
-            path={"/"}
+            path={`/items/${user?.uid}/add`}
             text="add listing"
             icon={<MdOutlineAddToPhotos />}
           />
@@ -83,7 +85,11 @@ function Nav() {
       >
         <NavBtn path={"/"} icon={<TfiGift />} text="free" />
         <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />
-        <NavBtn path={"/"} icon={<MdOutlineAddToPhotos />} text="add listing" />
+        <NavBtn
+          path={`/items/${user?.uid}/add`}
+          icon={<MdOutlineAddToPhotos />}
+          text="add listing"
+        />
         <NavBtn path={"/"} icon={<MdOutlineGroups />} text="community" />
         <NavBtn
           path={"/"}

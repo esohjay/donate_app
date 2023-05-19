@@ -12,7 +12,9 @@ function NavItem({ icon, path, text }: PropType) {
       <NavLink
         to={path}
         className={({ isActive }) =>
-          isActive ? "text-white " : "text-red-500"
+          isActive
+            ? "border-b pb-1 block border-b-white text-white"
+            : "border-none text-white"
         }
       >
         <div className="h-full flex flex-col  justify-center items-center">

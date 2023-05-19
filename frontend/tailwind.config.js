@@ -12,8 +12,8 @@ module.exports = {
       colors: {
         mainColor: "#DD2684",
         altColor: "#A3003F",
-        altColor2: "#F6F7F7",
-        mainColor2: "#E5DDF7",
+        altColor2: "#ffc300",
+        mainColor2: "#004b23",
         lightPurple: "#F6EDF5",
         blackClr: "#131516",
         lightColor: "#6E6E6E",
