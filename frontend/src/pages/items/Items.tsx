@@ -9,7 +9,7 @@ function Item() {
       <section className=" ">
         <div className="grid grid-cols-3 gap-3 mb-7 font-medium  w-fit">
           <NavLink
-            to={`/items/free`}
+            to={`/items`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white text-center rounded-md shadow-md bg-mainColor capitalize hover:bg-lightGreen hover:text-mainColor"

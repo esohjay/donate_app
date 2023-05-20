@@ -17,19 +17,20 @@ function useAuth() {
   const provider = useAppSelector(selectAuthProvider);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      dispatch(
-        setAuthStatus({
-          fullname: currentUser?.displayName,
-          email: currentUser?.email,
-          uid: currentUser?.uid,
-          phoneNumber: currentUser?.phoneNumber,
-          photoUrl: currentUser?.photoURL,
-        })
-      );
-      dispatch(getAuthProvider(currentUser?.providerData[0].providerId));
       if (currentUser === null) {
         Cookies.remove("token");
+        dispatch(setAuthStatus(null));
       } else {
+        dispatch(
+          setAuthStatus({
+            fullname: currentUser?.displayName,
+            email: currentUser?.email,
+            uid: currentUser?.uid,
+            phoneNumber: currentUser?.phoneNumber,
+            photoUrl: currentUser?.photoURL,
+          })
+        );
+        dispatch(getAuthProvider(currentUser?.providerData[0].providerId));
         const token = await currentUser.getIdToken(true);
         Cookies.set("token", `Bearer ${token}`, { expires: 1 });
       }

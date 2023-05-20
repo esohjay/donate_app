@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks";
 import useAuth from "../hooks/useAuth";
 import { selectWktCoordinates } from "../features/authSlice";
 import { useRegisterUserMutation } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   email: string;
@@ -17,8 +18,9 @@ type Inputs = {
 function SignUpAlt() {
   const { user } = useAuth();
   const [cordinateError, setCordinateError] = useState(false);
+  const navigate = useNavigate();
   const cordinates = useAppSelector(selectWktCoordinates);
-  const [registerUser] = useRegisterUserMutation();
+  const [registerUser, { isSuccess }] = useRegisterUserMutation();
 
   console.log(user);
 
@@ -43,6 +45,11 @@ function SignUpAlt() {
       uid: user?.uid,
     });
   };
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(`/items`);
+    }
+  });
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

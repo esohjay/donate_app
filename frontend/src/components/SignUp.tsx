@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
 import { SignupInputs } from "../type";
+import { useNavigate } from "react-router-dom";
 // import { useRegisterUserMutation } from "../api/auth";
 
 import {
@@ -18,6 +19,7 @@ import {
 
 function SignUp() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [cordinateError, setCordinateError] = useState(false);
   // const [registerUser] = useRegisterUserMutation();
 
@@ -66,10 +68,12 @@ function SignUp() {
   };
   useEffect(() => {
     // if the provider is not password, change screen to where user can complete their details
-    if (provider !== "password") {
+    if (user && provider !== "password") {
       dispatch(changeView("social-signup"));
+    } else if (user && provider === "password") {
+      navigate(`/items`);
     }
-  }, [provider]);
+  }, [provider, user]);
   console.log(user, provider);
   return (
     <article className="bg-white p-5 rounded-md ">

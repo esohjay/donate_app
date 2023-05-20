@@ -88,7 +88,7 @@ function Home() {
           inline-block md:w-1/3 hover:bg-altColor duration-500 transition-all"
             >
               <span className="flex gap-2 w-full justify-center items-center">
-                <p>Locate me</p> <HiOutlineLocationMarker />
+                <p>Use current location</p> <HiOutlineLocationMarker />
               </span>
             </button>
             <div className="flex gap-x-3  md:w-2/3 relative">

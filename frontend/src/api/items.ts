@@ -8,7 +8,7 @@ type Inputs = {
   name: string;
   transaction_type: string;
   user: string | undefined;
-  cordinate: string;
+  cordinates: string;
 };
 // function getItemsProvidesTags(result: GeoJSONFeatureCollection | undefined, error: any): string[]  {
 //   if (error) {
@@ -47,7 +47,7 @@ const itemApi = appApi.injectEndpoints({
           return [
             ...result.features.map((feature) => ({
               type: "ITEM" as const,
-              id: feature.properties.id.toString(),
+              id: feature.id.toString(),
             })),
           ];
         }

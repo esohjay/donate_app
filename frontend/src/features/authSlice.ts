@@ -14,8 +14,6 @@ import {
   FacebookAuthProvider,
   TwitterAuthProvider,
   signOut,
-  UserCredential,
-  User,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -69,23 +67,27 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
     );
 
     //get user token
-    const token = await auth?.currentUser?.getIdToken(true);
+    // const token = await auth?.currentUser?.getIdToken(true);
+    // const authToken = `Bearer ${token}`;
+    const authToken = Cookies.get("token");
     //verify user and get record from db
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/users`,
-      {
-        ...info,
-        uid: user.user.uid,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    if (authToken) {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/users`,
+        {
+          ...info,
+          uid: user.user.uid,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: authToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    }
 
-    return data;
     // return user.user.toJSON();
   }
 );
@@ -101,31 +103,35 @@ export const logInWithEmailAndPassword = createAsyncThunk(
     );
     //get user token
     // const token = Cookies.get("token");
-    const token = await auth?.currentUser?.getIdToken(true);
-    console.log(token);
-    const b = `Bearer ${token}`;
+    // const token = await auth?.currentUser?.getIdToken(true);
+
+    // const authToken = `Bearer ${token}`;
+    const authToken = Cookies.get("token");
+
     //verify user and get record from db
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_SERVER_URL}/users`,
-      {
-        ...info,
-      },
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/users/${user.user.uid}`,
       {
         headers: {
-          Authorization: b,
+          Authorization: authToken,
           "Content-Type": "application/json",
         },
       }
     );
     // console.log(data);
-    return user.user.toJSON();
+    return data;
   }
 );
 //Logout
-export const logOut = createAsyncThunk("auth/logout", async () => {
-  await signOut(auth);
-  return null;
-});
+export const logOut = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    await signOut(auth);
+    Cookies.remove("token");
+    dispatch(setAuthStatus(null));
+    return null;
+  }
+);
 //google authentication
 export const authenticateWithGoogle = createAsyncThunk(
   "auth/authenticateWithGoogle",
