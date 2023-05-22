@@ -9,6 +9,7 @@ import {
   authenticateWithGoogle,
   authenticateWithFacebook,
   authenticateWithTwitter,
+  selectToken,
   selectUser,
 } from "../features/authSlice";
 import { useAppSelector } from "../app/hooks";
@@ -22,6 +23,7 @@ type Inputs = {
 function Login() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const token = useAppSelector(selectToken);
   const navigate = useNavigate();
   const { user: firebaseUser } = useAuth();
   const {
@@ -38,11 +40,11 @@ function Login() {
     );
   };
   useEffect(() => {
-    if (user && firebaseUser) {
-      navigate(`/items`);
+    if (user) {
+      setTimeout(() => navigate("items"), 3000);
     }
-  });
-  console.log(user, firebaseUser);
+  }, [user]);
+  console.log(firebaseUser);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

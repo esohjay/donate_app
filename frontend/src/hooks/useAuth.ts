@@ -9,6 +9,7 @@ import {
   selectCurrentUser,
   getAuthProvider,
   selectAuthProvider,
+  // setToken,
 } from "../features/authSlice";
 
 function useAuth() {
@@ -31,8 +32,9 @@ function useAuth() {
           })
         );
         dispatch(getAuthProvider(currentUser?.providerData[0].providerId));
-        const token = await currentUser.getIdToken(true);
-        Cookies.set("token", `Bearer ${token}`, { expires: 1 });
+        // const token = await currentUser.getIdToken(true);
+        // Cookies.set("token", `Bearer ${token}`, { expires: 1 });
+        // dispatch(setToken(token));
       }
     });
 

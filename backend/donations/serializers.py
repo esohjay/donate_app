@@ -23,9 +23,12 @@ class ItemSerializer(GeoFeatureModelSerializer):
     def get_distance(self, obj):
         # Calculate the distance between the point and the given location
         # distance = obj.cordinates.distance(self.context["cordinates"])
-        return geodesic(
-            (obj.cordinates[1], obj.cordinates[0]), self.context["cordinates"]
-        ).miles
+        if self.context and self.context["cordinates"]:
+            return geodesic(
+                (obj.cordinates[1], obj.cordinates[0]), self.context["cordinates"]
+            ).miles
+        else:
+            return None
         # return distance
 
     # convert the

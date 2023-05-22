@@ -49,7 +49,7 @@ function SignUpAlt() {
     if (isSuccess) {
       navigate(`/items`);
     }
-  });
+  }, [isSuccess]);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

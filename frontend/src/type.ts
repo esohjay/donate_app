@@ -7,6 +7,7 @@ export type SignupInputs = {
   phone: string;
   cordinates: string | null;
   uid?: string;
+  token?: string;
 };
 
 export interface GeoJSONProperties {

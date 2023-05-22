@@ -96,6 +96,7 @@ class ItemView(APIView):
                 srid=4326,
             )
             print(point, "view")
+            print(request)
             # items = Item.objects.annotate(
             #     distance=DistanceFunc("cordinates", point)
             # ).filter(cordinates__distance_lte=(point, Distance(km=5)))

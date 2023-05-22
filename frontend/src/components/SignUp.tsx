@@ -15,15 +15,20 @@ import {
   authenticateWithFacebook,
   authenticateWithTwitter,
   selectWktCoordinates,
+  selectToken,
+  selectUser,
+  getToken,
 } from "../features/authSlice";
 
 function SignUp() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [cordinateError, setCordinateError] = useState(false);
-  // const [registerUser] = useRegisterUserMutation();
+  // const [registerUser, { isSuccess }] = useRegisterUserMutation();
 
   const cordinates = useAppSelector(selectWktCoordinates);
+  const token = useAppSelector(selectToken);
+  const dbUser = useAppSelector(selectUser);
 
   const { user, provider } = useAuth();
 
@@ -67,14 +72,15 @@ function SignUp() {
     dispatch(authenticateWithTwitter());
   };
   useEffect(() => {
-    // if the provider is not password, change screen to where user can complete their details
+    // if the provider is not password, change screen to where user can complete their details else register user
     if (user && provider !== "password") {
       dispatch(changeView("social-signup"));
-    } else if (user && provider === "password") {
-      navigate(`/items`);
+    } else if (user && provider === "password" && dbUser) {
+      setTimeout(() => navigate(`items`), 3000);
     }
-  }, [provider, user]);
-  console.log(user, provider);
+  }, [provider, user, navigate, dispatch, dbUser]);
+  console.log(user);
+
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

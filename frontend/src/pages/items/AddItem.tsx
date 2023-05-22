@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAddItemMutation } from "../../api/items";
 import { useGetSingleUserQuery } from "../../api/auth";
 import { useParams } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 type Inputs = {
   description: string;
@@ -15,8 +16,10 @@ type Inputs = {
 function AddItem() {
   const [addItem] = useAddItemMutation();
   const { uid } = useParams();
+  const { user } = useAuth();
   const { currentData } = useGetSingleUserQuery(`${uid}`);
   console.log(currentData);
+  console.log(user);
   const {
     register,
     handleSubmit: handleSubmitForm1,
