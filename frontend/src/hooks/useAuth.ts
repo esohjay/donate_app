@@ -9,13 +9,34 @@ import {
   selectCurrentUser,
   getAuthProvider,
   selectAuthProvider,
-  // setToken,
+  getToken,
+  selectToken,
 } from "../features/authSlice";
 
 function useAuth() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
   const provider = useAppSelector(selectAuthProvider);
+  const newToken = useAppSelector(selectToken);
+  auth.currentUser
+    ?.getIdTokenResult()
+    .then((token) => {
+      // if (!!token.claims.admin) {
+      //   dispatch(setAdminStatus());
+      // }
+      const tokenExpired = Date.now() > Date.parse(token.expirationTime);
+      console.log(tokenExpired);
+      console.log(Date.now());
+      console.log(Date.parse(token.expirationTime));
+      if (tokenExpired) {
+        dispatch(getToken());
+        Cookies.set("token", `Bearer ${newToken}`, { expires: 1 });
+        console.log("doneeee");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser === null) {

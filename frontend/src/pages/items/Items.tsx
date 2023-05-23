@@ -29,7 +29,7 @@ function Item() {
             wanted
           </NavLink>
         </div>
-        <article className="bg-white shadow-md rounded-md min-h-[50vh] ">
+        <article className="bg-white rounded-md min-h-[50vh] ">
           <Outlet />
         </article>
       </section>
