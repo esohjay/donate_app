@@ -5,7 +5,7 @@ import { Outlet, NavLink } from "react-router-dom";
 function Item() {
   // const navigate = useNavigate()
   return (
-    <section className="p-8">
+    <section className="p-4">
       <section className=" ">
         <div className="grid grid-cols-3 gap-3 mb-7 font-medium  w-fit">
           <NavLink
