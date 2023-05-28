@@ -25,12 +25,12 @@ function useAuth() {
       //   dispatch(setAdminStatus());
       // }
       const tokenExpired = Date.now() > Date.parse(token.expirationTime);
-      console.log(tokenExpired);
-      console.log(Date.now());
-      console.log(new Date(Date.now()));
-      console.log(new Date(token.expirationTime));
-      console.log(Date.parse(token.expirationTime));
-      console.log(token.token);
+      // console.log(tokenExpired);
+      // console.log(Date.now());
+      // console.log(new Date(Date.now()));
+      // console.log(new Date(token.expirationTime));
+      // console.log(Date.parse(token.expirationTime));
+      // console.log(token.token);
       Cookies.set("token", `Bearer ${token.token}`, { expires: 1 });
       if (tokenExpired) {
         dispatch(getToken());

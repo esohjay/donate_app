@@ -102,7 +102,9 @@ class ItemView(APIView):
             # ).filter(cordinates__distance_lte=(point, Distance(km=5)))
             # items = Item.objects.all()
             # Query items within the given radius
-            items = Item.objects.filter(cordinates__distance_lte=(point, 1000))
+            items = Item.objects.filter(
+                cordinates__distance_lte=(point, Distance(km=25))
+            )
             serializer = ItemSerializer(
                 items,
                 many=True,

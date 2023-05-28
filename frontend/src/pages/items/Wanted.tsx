@@ -2,19 +2,19 @@ import { useState, useEffect } from "react";
 import { useGetItemsQuery } from "../../api/items";
 import { GeoJSONFeature } from "../../type";
 
-function Free() {
+function Wanted() {
   const { currentData } = useGetItemsQuery();
-  const [freeItems, setFreeItems] = useState<GeoJSONFeature[]>();
+  const [wantedItems, setWantedItems] = useState<GeoJSONFeature[]>();
   useEffect(() => {
-    let offers = currentData?.features?.filter(
-      (item) => item.properties.transaction_type === "Offer"
+    let items = currentData?.features?.filter(
+      (item) => item.properties.transaction_type === "Request"
     );
-    setFreeItems(offers);
+    setWantedItems(items);
   }, [currentData]);
   return (
     <section className="space-y-3">
-      {freeItems && freeItems.length > 0 ? (
-        freeItems?.map((item) => (
+      {wantedItems && wantedItems.length > 0 ? (
+        wantedItems?.map((item) => (
           <article
             key={item.id}
             className="flex bg-white border border-gray-300 rounded-xl overflow-hidden items-center justify-start"
@@ -64,4 +64,4 @@ function Free() {
   );
 }
 
-export default Free;
+export default Wanted;

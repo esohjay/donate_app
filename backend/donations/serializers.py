@@ -26,7 +26,7 @@ class ItemSerializer(GeoFeatureModelSerializer):
         if self.context and self.context["cordinates"]:
             return geodesic(
                 (obj.cordinates[1], obj.cordinates[0]), self.context["cordinates"]
-            ).miles
+            ).kilometers
         else:
             return None
         # return distance
