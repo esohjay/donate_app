@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useGetItemsQuery } from "../../api/items";
 import { GeoJSONFeature } from "../../type";
+import { useNavigate } from "react-router-dom";
 
 function Free() {
   const { currentData } = useGetItemsQuery();
   const [freeItems, setFreeItems] = useState<GeoJSONFeature[]>();
+  const navigate = useNavigate();
   useEffect(() => {
     let offers = currentData?.features?.filter(
       (item) => item.properties.transaction_type === "Offer"
@@ -17,6 +19,7 @@ function Free() {
         freeItems?.map((item) => (
           <article
             key={item.id}
+            onClick={() => navigate(`${item.id}`)}
             className="flex bg-white border border-gray-300 rounded-xl overflow-hidden items-center justify-start"
           >
             <div className="relative w-28 h-28 md:w-32 md:h-32 flex-shrink-0">

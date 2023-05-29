@@ -18,6 +18,7 @@ class UserSerializer(GeoFeatureModelSerializer):
 class ItemSerializer(GeoFeatureModelSerializer):
     """A class to serialize locations as GeoJSON compatible data"""
 
+    user = UserSerializer()
     distance = serializers.SerializerMethodField()
 
     def get_distance(self, obj):
