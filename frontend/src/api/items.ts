@@ -1,5 +1,5 @@
 import { appApi } from ".";
-import { GeoJSONFeatureCollection } from "../type";
+import { GeoJSONFeature, GeoJSONFeatureCollection } from "../type";
 
 type Inputs = {
   description: string;
@@ -55,8 +55,8 @@ const itemApi = appApi.injectEndpoints({
         return ["ITEM"];
       },
     }),
-    getSingleItem: build.query({
-      query: () => "/items",
+    getSingleItem: build.query<GeoJSONFeature, string | undefined>({
+      query: (id) => `/items/${id}`,
       providesTags: (result, error, id) => [{ type: "ITEM", id }],
     }),
   }),

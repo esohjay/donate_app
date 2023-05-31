@@ -84,8 +84,10 @@ class ItemView(APIView):
 
     def get(self, request, id=None):
         if id:
+            print(id)
             item = self.get_item(id)
             serializer = ItemSerializer(item)
+            return Response(serializer.data)
         else:
             user = UserProfile.objects.get(pk=request.user["uid"])
             userSerializer = UserSerializer(user)
