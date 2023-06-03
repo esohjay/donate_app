@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import L, { LatLngExpression } from "leaflet";
 import { GeoJSONFeature, GeoJSONFeatureCollection } from "../type";
-import icon from "../assets/icon.png";
+import icon from "../assets/location-pin-svgrepo-com.svg";
 
 interface MapProps {
   center: LatLngExpression;
@@ -16,8 +16,7 @@ const Map: React.FC<MapProps> = ({ center, zoom, geojsonData }) => {
     mapRef.current = L.map("map", {
       center,
       zoom,
-      zoomSnap: 0,
-      dragging: true,
+      scrollWheelZoom: false,
     });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

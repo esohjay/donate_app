@@ -51,7 +51,7 @@ function ItemDetails() {
             currentData.geometry.coordinates[1],
             currentData.geometry.coordinates[0],
           ]}
-          zoom={13}
+          zoom={16}
           geojsonData={currentData}
         />
       )}
