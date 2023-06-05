@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAddItemMutation } from "../../api/items";
 import { useGetSingleUserQuery } from "../../api/auth";
 import { useParams } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 type Inputs = {
   description: string;
@@ -15,7 +16,10 @@ type Inputs = {
 function AddItem() {
   const [addItem] = useAddItemMutation();
   const { uid } = useParams();
+  const { user } = useAuth();
   const { currentData } = useGetSingleUserQuery(`${uid}`);
+  console.log(currentData);
+  console.log(user);
   const {
     register,
     handleSubmit: handleSubmitForm1,
@@ -24,7 +28,7 @@ function AddItem() {
   const onSubmitForm: SubmitHandler<Inputs> = (data) => {
     addItem({
       ...data,
-      cordinate: `${currentData?.geometry}`,
+      cordinates: `POINT(${currentData?.geometry?.coordinates[0]} ${currentData?.geometry?.coordinates[1]})`,
       user: currentData?.id,
     });
   };
@@ -108,6 +112,7 @@ function AddItem() {
           </label>
           <input
             type="number"
+            min={1}
             className="block p-2 border rounded-md w-full focus:outline-none text-mainColor text-base
                 focus:border-mainColor focus:border-2"
             {...register("quantity", {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 
 import NavItem from "./NavItem";
 import NavBtn from "./NavBtn";
@@ -13,13 +13,23 @@ import {
   MdOutlineAddToPhotos,
   MdOutlineGroups,
   MdOutlineVolunteerActivism,
+  MdOutlineLogout,
 } from "react-icons/md";
 import { TfiGift } from "react-icons/tfi";
 import useAuth from "../hooks/useAuth";
+import { useAppDispatch } from "../app/hooks";
+import { logOut } from "../features/authSlice";
 
 function Nav() {
   const [showNav, setShowNav] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    dispatch(logOut());
+    navigate("/");
+  };
+  console.log(user);
   return (
     <header className="relative">
       <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16">
@@ -60,11 +70,13 @@ function Nav() {
         <ul className="hidden md:flex gap-x-7 items-center ">
           <NavItem path={"/"} text="free" icon={<TfiGift />} />
           <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />
-          <NavItem
-            path={`/items/${user?.uid}/add`}
-            text="add listing"
-            icon={<MdOutlineAddToPhotos />}
-          />
+          {user && (
+            <NavItem
+              path={`/items/${user?.uid}/add`}
+              text="add listing"
+              icon={<MdOutlineAddToPhotos />}
+            />
+          )}
           <NavItem path={"/"} text="community" icon={<MdOutlineGroups />} />
 
           <NavItem
@@ -75,6 +87,17 @@ function Nav() {
           <NavItem path={"/"} text="chats" icon={<BsChatQuote />} />
           <NavItem path={"/"} text="notification" icon={<FaRegBell />} />
           <NavItem path={"/"} text="profile" icon={<FaRegUser />} />
+          {user && (
+            <li onClick={handleLogout}>
+              <div className="h-full flex flex-col  justify-center items-center">
+                <button className="text-2xl text-white">
+                  <MdOutlineLogout />
+                </button>
+
+                <p className="text-white capitalize text-xs">Logout</p>
+              </div>
+            </li>
+          )}
         </ul>
       </nav>
       <ul
@@ -85,11 +108,13 @@ function Nav() {
       >
         <NavBtn path={"/"} icon={<TfiGift />} text="free" />
         <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />
-        <NavBtn
-          path={`/items/${user?.uid}/add`}
-          icon={<MdOutlineAddToPhotos />}
-          text="add listing"
-        />
+        {user && (
+          <NavBtn
+            path={`/items/${user?.uid}/add`}
+            icon={<MdOutlineAddToPhotos />}
+            text="add listing"
+          />
+        )}
         <NavBtn path={"/"} icon={<MdOutlineGroups />} text="community" />
         <NavBtn
           path={"/"}
@@ -97,6 +122,20 @@ function Nav() {
           text="volunteer"
         />
         <NavBtn path={"/"} icon={<FaRegUser />} text="profile" />
+        {user && (
+          <li
+            onClick={handleLogout}
+            className="w-28 h-28 bg-white rounded-lg shadow-md"
+          >
+            <div className="h-full flex flex-col  justify-center items-center space-y-2">
+              <button className="text-3xl text-mainColor">
+                <MdOutlineLogout />
+              </button>
+
+              <p className="text-mainColor capitalize text-sm">Logout</p>
+            </div>
+          </li>
+        )}
       </ul>
     </header>
   );
