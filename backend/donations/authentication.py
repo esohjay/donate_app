@@ -13,10 +13,10 @@ from .exceptions import NoAuthToken
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        if request.method == 'GET' and request.path in '/api/v1/items':
+        if request.method == "POST" and request.path == "/api/v1/users":
             return None
         else:
-            req_header = request.META.get('HTTP_AUTHORIZATION')
+            req_header = request.META.get("HTTP_AUTHORIZATION")
             if not req_header:
                 raise NoAuthToken("No auth token provided")
             token = req_header.split(" ").pop()
@@ -27,7 +27,7 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
                 return (request.user, None)
             except Exception:
                 raise InvalidAuthToken("Invalid auth token")
-            
+
             # if not token or not decoded_token:
             #     return None
             # user = None
@@ -39,5 +39,3 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             #     return None
 
             # return (user, None)
-            
-

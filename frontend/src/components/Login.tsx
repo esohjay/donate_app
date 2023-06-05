@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "../app/hooks";
 import { changeView } from "../features/appSlice";
@@ -9,8 +9,12 @@ import {
   authenticateWithGoogle,
   authenticateWithFacebook,
   authenticateWithTwitter,
+  selectToken,
+  selectUser,
 } from "../features/authSlice";
+import { useAppSelector } from "../app/hooks";
 import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   email: string;
@@ -18,8 +22,10 @@ type Inputs = {
 };
 function Login() {
   const dispatch = useAppDispatch();
-  // const user = useAppSelector(selectUser);
-  const user = useAuth();
+  const user = useAppSelector(selectUser);
+  const token = useAppSelector(selectToken);
+  const navigate = useNavigate();
+  const { user: firebaseUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -33,7 +39,12 @@ function Login() {
       })
     );
   };
-  console.log(user);
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => navigate("items"), 3000);
+    }
+  }, [user]);
+  console.log(firebaseUser);
   return (
     <article className="bg-white p-5 rounded-md ">
       <h3 className="text-center text-mainColor uppercase text-2xl font-semibold md:text-4xl mb-5">

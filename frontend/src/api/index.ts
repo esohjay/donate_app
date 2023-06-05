@@ -1,18 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { QueryDefinition } from "@reduxjs/toolkit/query";
+import { RootState } from "../app/store";
 
 import Cookies from "js-cookie";
 // import { GeometryCollection } from "geojson";
 import { GeoJSONFeatureCollection } from "../type";
 import { GeoJSONProperties } from "../type";
 
+// interface RootState {
+//   // Define your root state here
+// }
+
 export const appApi = createApi({
   reducerPath: "appApi",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.REACT_APP_SERVER_URL,
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
       const authToken = Cookies.get("token");
-      if (authToken) headers.set("Authorization", authToken);
+      if (token) {
+        headers.set("Authorization", token);
+      } else if (authToken) {
+        headers.set("Authorization", authToken);
+      }
+
       return headers;
     },
   }),

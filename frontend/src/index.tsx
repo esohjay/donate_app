@@ -6,7 +6,9 @@ import App from "./App";
 import Home from "./pages/Home";
 import Item from "./pages/items/Items";
 import Free from "./pages/items/Free";
+import Wanted from "./pages/items/Wanted";
 import AddItem from "./pages/items/AddItem";
+import ItemDetails from "./pages/items/ItemDetails";
 import reportWebVitals from "./reportWebVitals";
 import {
   createBrowserRouter,
@@ -22,8 +24,11 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
       <Route path="items" element={<Item />}>
-        <Route index path="free" element={<Free />} />
-        <Route index path=":uid/add" element={<AddItem />} />
+        <Route index element={<Free />} />
+        <Route path=":uid/add" element={<AddItem />} />
+        <Route path="wanted" element={<Wanted />} />
+        <Route path="wanted/:itemId" element={<ItemDetails />} />
+        <Route path=":itemId" element={<ItemDetails />} />
       </Route>
     </Route>
   )
