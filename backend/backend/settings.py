@@ -10,6 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+
+import firebase_admin
+from firebase_admin import credentials
+
+
+
 # from dotenv import load_dotenv
 # load_dotenv()
 
@@ -20,8 +26,58 @@ if os.name == 'nt':
     VIRTUAL_ENV_BASE = os.environ['VIRTUAL_ENV']
     os.environ['PATH'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
     os.environ['PROJ_LIB'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
+ 
+import os
+from firebase_admin import credentials, initialize_app
 
 
+from dotenv import load_dotenv
+load_dotenv()
+# from firebase_admin import auth, credentials
+
+cred = credentials.Certificate({
+    "type": os.environ.get('FIREBASE_TYPE'),
+    "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+    "private_key_id": os.environ.get('FIREBASE_PRIVATE_KEY_ID'),
+    "private_key": os.environ.get('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
+    "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+    "client_id": os.environ.get('FIREBASE_CLIENT_ID'),
+    "auth_uri": os.environ.get('FIREBASE_AUTH_URI'),
+    "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+    "auth_provider_x509_cert_url": os.environ.get('FIREBASE_AUTH_PROVIDER_URI'),
+    "client_x509_cert_url": os.environ.get('FIREBASE_CLIENT_URI'),
+    "universe_domain": os.environ.get('FIREBASE_UNIVERSE_DOMAIN'),
+})
+firebase_app = initialize_app(cred)
+# firebase_cred = {
+#     "type": os.environ.get('FIREBASE_TYPE'),
+#     "project_id": os.environ.get('FIREBASE_PROJECT_ID'),
+#     "private_key_id": os.environ.get('FIREBASE_PRIVATE_KEY_ID'),
+#     "private_key": os.environ.get('FIREBASE_PRIVATE_KEY'),
+#     "client_email": os.environ.get('FIREBASE_CLIENT_EMAIL'),
+#     "client_id": os.environ.get('FIREBASE_CLIENT_ID'),
+#     "auth_uri": os.environ.get('FIREBASE_AUTH_URI'),
+#     "token_uri": os.environ.get('FIREBASE_TOKEN_URI'),
+#     "auth_provider_x509_cert_url": os.environ.get('FIREBASE_AUTH_PROVIDER_URI'),
+#     "client_x509_cert_url": os.environ.get('FIREBASE_CERT_URI'),
+#   }
+  
+
+# cred = credentials.Certificate(os.path.join('backend', 'firebase_credentials.json'))
+# # cred = credentials.Certificate(os.path.join('backend', 'firebase_credentials.json'))
+# firebase_admin.initialize_app(cred)
+# print(os.path.join('backend', 'firebase_credentials.json'))
+# default_app = firebase_admin.initialize_app()
+# from firebase_admin import auth
+# user = auth.create_user(
+#     email='olu@example.com',
+#     email_verified=False,
+#     phone_number='+15555550189',
+#     password='secretPassword',
+#     display_name='John Doe',
+#     photo_url='http://www.example.com/12345678/photo.png',
+#     disabled=False)
+# print('Sucessfully created new user: {0}'.format(user.uid))
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -55,20 +111,21 @@ INSTALLED_APPS = [
     "rest_framework_gis",
     'rest_framework.authtoken',
     'django_filters',
-    
+    "rest_framework_api_key",
     'dj_rest_auth',
     # 'django.contrib.sites',
     'allauth',
     'allauth.account', 
     'allauth.socialaccount',
     'dj_rest_auth.registration',
+    "corsheaders",
     # 'allauth.socialaccount.providers.google'
 ]
 
-SITE_ID = 1
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+# SITE_ID = 1
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
 # SOCIALACCOUNT_LOGIN_ON_GET=True
 # AUTH_USER_MODEL = 'donations.User'
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -94,13 +151,15 @@ ACCOUNT_USERNAME_REQUIRED = False
 # }
 
 REST_FRAMEWORK = {
-     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    #  'DEFAULT_PERMISSION_CLASSES': [
+    #     # 'rest_framework.permissions.IsAuthenticated',
+    #     "rest_framework_api_key.permissions.HasAPIKey",
+    # ],
 	'DEFAULT_AUTHENTICATION_CLASSES': (
-    
-		'rest_framework.authentication.TokenAuthentication',
-         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'donations.authentication.FirebaseAuthentication',
+    #  'donations.authMiddleware.FirebaseAuthMiddleware',
+		# 'rest_framework.authentication.TokenAuthentication',
+        #  'rest_framework_simplejwt.authentication.JWTAuthentication',
 	)
 }
 # REST_FRAMEWORK = {
@@ -110,6 +169,7 @@ REST_FRAMEWORK = {
 # }
 # REST_USE_JWT = True
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -138,7 +198,29 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = [
+'DELETE',
+'GET',
+'OPTIONS',
+'PATCH',
+'POST',
+'PUT',
+]
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'x-requested-with',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -148,7 +230,7 @@ DATABASES = {
         'NAME': 'spatialdb',
         'USER': 'postgres',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'PASSWORD': 'postgress',
+        'PASSWORD': 'password',
         'HOST': '127.0.0.1',
         'PORT':'5432'
 
@@ -196,3 +278,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# FIREBASE_CONFIG = os.path.join(BASE_DIR,'firebase_credentials.json')
