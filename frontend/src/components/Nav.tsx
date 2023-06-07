@@ -68,8 +68,8 @@ function Nav() {
         </ul>
         {/* Big screen */}
         <ul className="hidden md:flex gap-x-7 items-center ">
-          <NavItem path={"/"} text="free" icon={<TfiGift />} />
-          <NavItem path={"/"} text="wanted" icon={<BsBasket2 />} />
+          <NavItem path={"/items"} text="free" icon={<TfiGift />} />
+          <NavItem path={"/items/wanted"} text="wanted" icon={<BsBasket2 />} />
           {user && (
             <NavItem
               path={`/items/${user?.uid}/add`}
@@ -106,8 +106,8 @@ function Nav() {
           showNav ? "left-0" : "-left-full"
         } bg-white bg-opacity-50  backdrop-blur-md md:hidden shadow-sm z-50`}
       >
-        <NavBtn path={"/"} icon={<TfiGift />} text="free" />
-        <NavBtn path={"/"} icon={<BsBasket2 />} text="wanted" />
+        <NavBtn path={"/items"} icon={<TfiGift />} text="free" />
+        <NavBtn path={"/items/wanted"} icon={<BsBasket2 />} text="wanted" />
         {user && (
           <NavBtn
             path={`/items/${user?.uid}/add`}

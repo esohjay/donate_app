@@ -1,16 +1,38 @@
 import React, { useEffect, useRef } from "react";
-import L, { LatLngExpression } from "leaflet";
+import L, { LatLngExpression, latLng } from "leaflet";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "leaflet.markercluster";
+import {
+  setWktCoordinates,
+  selectWktCoordinates,
+  setMapCenter,
+  selectMapCenter,
+} from "../features/authSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+
 import { GeoJSONFeature, GeoJSONFeatureCollection } from "../type";
-import icon from "../assets/location-pin-svgrepo-com.svg";
+import icon from "../assets/pin.svg";
 
 interface MapProps {
   center: LatLngExpression;
   zoom: number;
   geojsonData: GeoJSONFeature | GeoJSONFeatureCollection;
+  allowCoordSelection?: boolean;
 }
 
-const Map: React.FC<MapProps> = ({ center, zoom, geojsonData }) => {
+const Map: React.FC<MapProps> = ({
+  center,
+  zoom,
+  geojsonData,
+  allowCoordSelection,
+}) => {
   const mapRef = useRef<L.Map | null>(null);
+  const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
+  const dispatch = useAppDispatch();
+  const wkt = useAppSelector(selectWktCoordinates);
 
   useEffect(() => {
     mapRef.current = L.map("map", {
@@ -22,54 +44,135 @@ const Map: React.FC<MapProps> = ({ center, zoom, geojsonData }) => {
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "Map data &copy; OpenStreetMap contributors",
     }).addTo(mapRef.current);
-    if (mapRef.current && geojsonData.type === "Feature") {
-      const latLng = L.latLng(
-        geojsonData.geometry.coordinates[1],
-        geojsonData.geometry.coordinates[0]
-      );
-      console.log(latLng);
-      // L.marker(latLng).addTo(mapRef?.current as L.Map);
 
-      const customIcon = L.icon({
-        iconUrl: icon, // Replace with the correct path to your marker icon image
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-      });
+    markerClusterGroupRef.current = L.markerClusterGroup({
+      spiderfyOnMaxZoom: false,
+      showCoverageOnHover: false,
+      zoomToBoundsOnClick: false,
+    }).addTo(mapRef.current!);
 
-      L.marker(latLng, { icon: customIcon }).addTo(mapRef.current!);
-    }
+    // if (mapRef.current && geojsonData.type === "Feature") {
+    //   const latLng = L.latLng(
+    //     geojsonData.geometry.coordinates[1],
+    //     geojsonData.geometry.coordinates[0]
+    //   );
+
+    //   const customIcon = L.icon({
+    //     iconUrl: icon, // Replace with the correct path to your marker icon image
+    //     iconSize: [50, 81],
+    //     iconAnchor: [12, 41],
+    //     popupAnchor: [1, -34],
+    //   });
+
+    //   L.marker(latLng, { icon: customIcon }).addTo(mapRef.current!);
+    // } else if (mapRef.current && geojsonData.type === "FeatureCollection") {
+    //   console.log(geojsonData.features.length);
+    //   L.geoJSON(geojsonData, {
+    //     onEachFeature: (feature: GeoJSONFeature, layer) => {
+    //       const latLng = L.latLng(
+    //         feature.geometry.coordinates[1],
+    //         feature.geometry.coordinates[0]
+    //       );
+
+    //       const customIcon = L.icon({
+    //         iconUrl: icon, // Replace with the correct path to your marker icon image
+    //         iconSize: [50, 81],
+    //         iconAnchor: [12, 41],
+    //         popupAnchor: [1, -34],
+    //       });
+
+    //       L.marker(latLng, { icon: customIcon }).addTo(mapRef.current!);
+    //     },
+    //   });
+    // }
 
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
       }
     };
-  }, [center, zoom, geojsonData]);
+  }, [center, zoom]);
 
-  const calculateDistance = (
-    latLng1: L.LatLngExpression,
-    latLng2: L.LatLngExpression
-  ): number => {
-    return mapRef.current?.distance(latLng1, latLng2) || 0;
-  };
+  useEffect(() => {
+    const customIcon = L.icon({
+      iconUrl: icon, // Replace with the correct path to your marker icon image
+      iconSize: [50, 81],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
+    if (
+      mapRef.current &&
+      geojsonData.type === "Feature" &&
+      !allowCoordSelection
+    ) {
+      const latLng = L.latLng(
+        geojsonData.geometry.coordinates[1],
+        geojsonData.geometry.coordinates[0]
+      );
 
-  const addMarker = (latLng: L.LatLngExpression): void => {
-    L.marker(latLng).addTo(mapRef.current as L.Map);
-  };
+      L.marker(latLng, { icon: customIcon }).addTo(mapRef.current!);
+    } else if (
+      mapRef.current &&
+      geojsonData.type === "FeatureCollection" &&
+      markerClusterGroupRef.current
+    ) {
+      markerClusterGroupRef.current.clearLayers();
 
-  return (
-    <div id="map" style={{ height: "400px" }}>
-      <button
-        onClick={() => calculateDistance([51.5, -0.09], [51.51, -0.1])}
-        className="bg-mainColor text-white p-9 z-50 relative"
-      >
-        Calculate Distance
-      </button>
+      // Create markers and bind popup with feature count for each cluster
+      //   const markers: L.Marker[] = [];
+      markersRef.current = [];
+      geojsonData.features.forEach((feature: GeoJSONFeature) => {
+        const latLng = L.latLng(
+          feature.geometry.coordinates[1],
+          feature.geometry.coordinates[0]
+        );
+        const marker = L.marker(latLng, { icon: customIcon }).bindPopup(
+          `<p>${feature.properties.name}</p>`
+        );
+        markersRef.current.push(marker);
+      });
 
-      <button onClick={() => addMarker([51.5, -0.09])}>Add Marker</button>
-    </div>
-  );
+      const cluster = new L.MarkerClusterGroup();
+      cluster.addLayers(markersRef.current);
+
+      markerClusterGroupRef.current!.addLayer(cluster);
+    }
+  }, [geojsonData, allowCoordSelection]);
+
+  useEffect(() => {
+    const handleMapClick = (event: L.LeafletMouseEvent) => {
+      if (markersRef.current.length) {
+        markersRef.current[0].removeFrom(mapRef.current!);
+      }
+
+      //   const customIcon = L.icon({
+      //     iconUrl: icon, // Replace with the correct path to your marker icon image
+      //     iconSize: [30, 61],
+      //     iconAnchor: [12, 41],
+      //     popupAnchor: [1, -34],
+      //   });
+
+      const { lat, lng } = event.latlng;
+      mapRef.current!.setView([lat, lng], 12);
+      //   L.marker(event.latlng, { icon: customIcon }).addTo(mapRef.current!);
+
+      dispatch(
+        setWktCoordinates(`POINT(${event.latlng.lng} ${event.latlng.lat})`)
+      );
+    };
+
+    if (mapRef.current && allowCoordSelection) {
+      mapRef.current.on("click", handleMapClick);
+    }
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.off("click", handleMapClick);
+      }
+    };
+  }, [allowCoordSelection, dispatch, wkt, markersRef]);
+
+  return <div id="map" style={{ height: "400px" }}></div>;
 };
 
 export default Map;

@@ -11,9 +11,11 @@ import {
   getCoordinatesFromAddress,
   selectWktCoordinates,
   setWktCoordinates,
+  selectMapCenter,
 } from "../features/authSlice";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useGeolocated } from "react-geolocated";
+import Map from "../components/Map";
 
 // import useMap from "../hooks/useMap";
 import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
@@ -34,6 +36,7 @@ function Home() {
     isOptimisticGeolocationEnabled: false,
   });
   const coordinates = useAppSelector(selectWktCoordinates);
+  const mapCenter = useAppSelector(selectMapCenter);
   const dispatch = useAppDispatch();
   // const mapContainer = useRef<HTMLDivElement>(null!);
   // const map = useMap(mapContainer.current);
@@ -50,6 +53,9 @@ function Home() {
   useEffect(() => {
     if (coords) {
       dispatch(
+        // The coordinates are stored in LongLat format because Geos which handles coordinates in backend uses longlat
+        // same with leaflet.
+        //But LatLng is the general standard
         setWktCoordinates(`POINT(${coords.longitude} ${coords.latitude})`)
       );
     }
@@ -63,7 +69,7 @@ function Home() {
     md:flex-row items-center  md:px-10"
       >
         <article className="h-[480px] w-full">
-          <div className="h-4/6 md:h-5/6">
+          {/* <div className="h-4/6 md:h-5/6">
             <MapContainer
               center={[51.505, -0.09]}
               zoom={13}
@@ -80,7 +86,21 @@ function Home() {
                 </Popup>
               </Marker>
             </MapContainer>
-          </div>
+          </div> */}
+          <Map
+            center={mapCenter}
+            zoom={7}
+            geojsonData={{
+              type: "Feature",
+              id: "",
+              properties: {},
+              geometry: {
+                type: "Point",
+                coordinates: mapCenter,
+              },
+            }}
+            allowCoordSelection={true}
+          />
           <article className="flex justify-center md:py-2 flex-col md:flex-row h-2/6 md:h-1/6 mt-2 md:mt-5 px-10 gap-3 md:gap-5">
             <button
               onClick={() => getPosition()}

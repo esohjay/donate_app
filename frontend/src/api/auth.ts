@@ -11,7 +11,7 @@ const authApi = appApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "AUTH", id: "LIST" }],
     }),
-    getSingleUser: build.query<GeoJSONFeature, string>({
+    getSingleUser: build.query<GeoJSONFeature, string | undefined>({
       query: (id) => `/users/${id}`,
       providesTags: (result, error, id) => [{ type: "AUTH", id }],
     }),

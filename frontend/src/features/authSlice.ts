@@ -40,6 +40,7 @@ interface AuthState {
   error: object | null;
   wktCoordinates: string | null;
   token: string | undefined;
+  mapCenter: [number, number];
 }
 
 interface UserDetails {
@@ -58,6 +59,7 @@ const initialState: AuthState = {
   error: null,
   wktCoordinates: null,
   token: undefined,
+  mapCenter: [51.505, -0.09],
 };
 
 //email and password sign up
@@ -185,6 +187,9 @@ export const getCoordinatesFromAddress = createAsyncThunk(
     );
     let locations: Array<Address> = [];
     for (let location of data.results) {
+      // The coordinates are stored in LongLat format because Geos which handles coordinates in backend uses longlat
+      // same with leaflet.
+      //But LatLng is the general standard
       const coords = `POINT(${location.lon} ${location.lat})`;
       const address: string = location.formatted;
       const placeId: string = location.place_id;
@@ -213,6 +218,9 @@ export const authSlice = createSlice({
     },
     setWktCoordinates: (state, action: PayloadAction<string | null>) => {
       state.wktCoordinates = action.payload;
+    },
+    setMapCenter: (state, action: PayloadAction<[number, number]>) => {
+      state.mapCenter = action.payload;
     },
     setToken: (state, action: PayloadAction<string | undefined>) => {
       state.token = action.payload;
@@ -365,8 +373,13 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setAuthStatus, getAuthProvider, setWktCoordinates, setToken } =
-  authSlice.actions;
+export const {
+  setAuthStatus,
+  getAuthProvider,
+  setWktCoordinates,
+  setToken,
+  setMapCenter,
+} = authSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectUser = (state: RootState) => state.auth.user;
@@ -375,6 +388,7 @@ export const selectToken = (state: RootState) => state.auth.token;
 export const selectCurrentUser = (state: RootState) => state.auth.currentUser;
 export const selectAuthProvider = (state: RootState) => state.auth.authProvider;
 export const selectCoordinates = (state: RootState) => state.auth.coordinates;
+export const selectMapCenter = (state: RootState) => state.auth.mapCenter;
 export const selectWktCoordinates = (state: RootState) =>
   state.auth.wktCoordinates;
 export default authSlice.reducer;
