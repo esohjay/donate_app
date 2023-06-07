@@ -29,7 +29,7 @@ function Nav() {
     dispatch(logOut());
     navigate("/");
   };
-  console.log(user);
+  // console.log(user);
   return (
     <header className="relative">
       <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16">

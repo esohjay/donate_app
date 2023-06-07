@@ -1,4 +1,9 @@
-import { selectCoordinates, setWktCoordinates } from "../features/authSlice";
+import {
+  selectCoordinates,
+  setWktCoordinates,
+  setMapCenter,
+  setLocationSelectStatus,
+} from "../features/authSlice";
 import { VscChromeClose } from "react-icons/vsc";
 
 import {
@@ -11,9 +16,12 @@ function AddressModal() {
   const coords = useAppSelector(selectCoordinates);
   const modal = useAppSelector(selectAddressModalView);
   const dispatch = useAppDispatch();
-  const handleLocationSelect = (wkt: string) => {
-    dispatch(setWktCoordinates(wkt));
+  const handleLocationSelect = (lat: number, lon: number) => {
+    dispatch(setWktCoordinates(`POINT(${lon} ${lat})`));
     dispatch(setAddressModalView(false));
+    dispatch(setMapCenter([lat, lon]));
+    console.log(lon, lat);
+    dispatch(setLocationSelectStatus(true));
   };
 
   return (
@@ -35,7 +43,10 @@ ${modal ? "grid" : "hidden"} place-items-center`}
                 key={addressProperties.placeId}
                 className="p-2  border-b hover:bg-mainColor hover:text-white cursor-pointer mb-2"
                 onClick={() =>
-                  handleLocationSelect(addressProperties.coordinates)
+                  handleLocationSelect(
+                    addressProperties.latitude,
+                    addressProperties.longitude
+                  )
                 }
               >
                 {addressProperties.address}

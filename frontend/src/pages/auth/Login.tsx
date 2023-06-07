@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useAppDispatch } from "../app/hooks";
-import { changeView } from "../features/appSlice";
+import { useAppDispatch } from "../../app/hooks";
+
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter, FaFacebookF } from "react-icons/fa";
 import {
@@ -9,11 +9,10 @@ import {
   authenticateWithGoogle,
   authenticateWithFacebook,
   authenticateWithTwitter,
-  selectToken,
   selectUser,
-} from "../features/authSlice";
-import { useAppSelector } from "../app/hooks";
-import useAuth from "../hooks/useAuth";
+} from "../../features/authSlice";
+import { useAppSelector } from "../../app/hooks";
+import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 type Inputs = {
@@ -23,7 +22,6 @@ type Inputs = {
 function Login() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const token = useAppSelector(selectToken);
   const navigate = useNavigate();
   const { user: firebaseUser } = useAuth();
   const {
@@ -115,10 +113,7 @@ function Login() {
         </button>
       </div>
       <div className="text-center mt-3">
-        <button
-          className="font-medium"
-          onClick={() => dispatch(changeView("password-signup"))}
-        >
+        <button className="font-medium" onClick={() => navigate("/register")}>
           Don't have an account? <span className="text-mainColor">Sign up</span>
         </button>
       </div>

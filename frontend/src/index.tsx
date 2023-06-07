@@ -4,6 +4,8 @@ import "./index.css";
 import "leaflet/dist/leaflet.css";
 import App from "./App";
 import Home from "./pages/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 import Item from "./pages/items/Items";
 import Free from "./pages/items/Free";
 import Wanted from "./pages/items/Wanted";
@@ -23,6 +25,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
       <Route path="items" element={<Item />}>
         <Route index element={<Free />} />
         <Route path=":uid/add" element={<AddItem />} />

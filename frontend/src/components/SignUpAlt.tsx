@@ -22,7 +22,7 @@ function SignUpAlt() {
   const cordinates = useAppSelector(selectWktCoordinates);
   const [registerUser, { isSuccess }] = useRegisterUserMutation();
 
-  console.log(user);
+  // console.log(user);
 
   const {
     register: registerFields1,

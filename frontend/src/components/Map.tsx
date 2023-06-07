@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import L, { LatLngExpression, latLng } from "leaflet";
+import React, { useEffect, useRef, useState } from "react";
+import L, { LatLngExpression } from "leaflet";
 import "leaflet.markercluster";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
@@ -7,7 +7,7 @@ import "leaflet.markercluster";
 import {
   setWktCoordinates,
   selectWktCoordinates,
-  setMapCenter,
+  selectLocationSelected,
   selectMapCenter,
 } from "../features/authSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -28,11 +28,14 @@ const Map: React.FC<MapProps> = ({
   geojsonData,
   allowCoordSelection,
 }) => {
+  const [markerToRemove, setMarkerToRemove] = useState<L.Marker>();
   const mapRef = useRef<L.Map | null>(null);
   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
   const dispatch = useAppDispatch();
   const wkt = useAppSelector(selectWktCoordinates);
+  const locationSelected = useAppSelector(selectLocationSelected);
+  const mapCenter = useAppSelector(selectMapCenter);
 
   useEffect(() => {
     mapRef.current = L.map("map", {
@@ -141,21 +144,21 @@ const Map: React.FC<MapProps> = ({
 
   useEffect(() => {
     const handleMapClick = (event: L.LeafletMouseEvent) => {
-      if (markersRef.current.length) {
-        markersRef.current[0].removeFrom(mapRef.current!);
+      if (markerToRemove) {
+        markerToRemove.removeFrom(mapRef.current!);
       }
-
-      //   const customIcon = L.icon({
-      //     iconUrl: icon, // Replace with the correct path to your marker icon image
-      //     iconSize: [30, 61],
-      //     iconAnchor: [12, 41],
-      //     popupAnchor: [1, -34],
-      //   });
+      const customIcon = L.icon({
+        iconUrl: icon, // Replace with the correct path to your marker icon image
+        iconSize: [30, 61],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+      });
 
       const { lat, lng } = event.latlng;
       mapRef.current!.setView([lat, lng], 12);
-      //   L.marker(event.latlng, { icon: customIcon }).addTo(mapRef.current!);
-
+      const marker = L.marker(event.latlng, { icon: customIcon });
+      setMarkerToRemove(marker);
+      marker.addTo(mapRef.current!);
       dispatch(
         setWktCoordinates(`POINT(${event.latlng.lng} ${event.latlng.lat})`)
       );
@@ -170,7 +173,26 @@ const Map: React.FC<MapProps> = ({
         mapRef.current.off("click", handleMapClick);
       }
     };
-  }, [allowCoordSelection, dispatch, wkt, markersRef]);
+  }, [allowCoordSelection, dispatch, wkt, markerToRemove]);
+
+  useEffect(() => {
+    if (allowCoordSelection && locationSelected) {
+      if (markerToRemove) {
+        markerToRemove.removeFrom(mapRef.current!);
+      }
+      const customIcon = L.icon({
+        iconUrl: icon, // Replace with the correct path to your marker icon image
+        iconSize: [30, 61],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+      });
+
+      mapRef.current!.setView(mapCenter, 12);
+      const marker = L.marker(mapCenter, { icon: customIcon });
+      setMarkerToRemove(marker);
+      marker.addTo(mapRef.current!);
+    }
+  }, [locationSelected, mapCenter, allowCoordSelection]);
 
   return <div id="map" style={{ height: "400px" }}></div>;
 };
