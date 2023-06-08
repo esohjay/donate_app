@@ -39,9 +39,9 @@ function Login() {
   };
   useEffect(() => {
     if (user) {
-      setTimeout(() => navigate("items"), 3000);
+      setTimeout(() => navigate("/items"), 3000);
     }
-  }, [user]);
+  }, [user, navigate]);
   console.log(firebaseUser);
   return (
     <article className="bg-white p-5 rounded-md ">

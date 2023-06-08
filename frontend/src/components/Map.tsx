@@ -194,7 +194,7 @@ const Map: React.FC<MapProps> = ({
     }
   }, [locationSelected, mapCenter, allowCoordSelection]);
 
-  return <div id="map" style={{ height: "400px" }}></div>;
+  return <div id="map" className="w-full h-full"></div>;
 };
 
 export default Map;
