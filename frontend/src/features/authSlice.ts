@@ -14,6 +14,7 @@ import {
   FacebookAuthProvider,
   TwitterAuthProvider,
   signOut,
+  // signInWithRedirect,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -140,12 +141,15 @@ export const authenticateWithGoogle = createAsyncThunk(
   "auth/authenticateWithGoogle",
   async () => {
     const provider = new GoogleAuthProvider();
+    console.log(provider);
+    // const result = await signInWithRedirect(auth, provider);
     const result = await signInWithPopup(auth, provider);
+
     console.log(result);
-    //  const credential = GoogleAuthProvider.credentialFromResult(result);
-    //  const token = credential?.accessToken;
+    // const credential = GoogleAuthProvider.credentialFromResult(result);
+    //  const   token = credential?.accessToken;
     // The signed-in user info.
-    return result.user.toJSON();
+    return result;
   }
 );
 
@@ -304,7 +308,7 @@ export const authSlice = createSlice({
     builder.addCase(
       authenticateWithGoogle.fulfilled,
       (state: AuthState, action) => {
-        state.user = action.payload;
+        // state.user = action.payload;
         state.status = "success";
       }
     );

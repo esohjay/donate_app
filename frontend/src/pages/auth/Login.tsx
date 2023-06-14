@@ -96,6 +96,7 @@ function Login() {
           </p>
           <div className="flex gap-3 justify-center">
             <button
+              type="button"
               onClick={() => dispatch(authenticateWithGoogle())}
               className="inline-block text-lg md:text-2xl p-3 rounded-md shadow-md bg-white"
             >
